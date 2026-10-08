@@ -1,0 +1,132 @@
+// Prisma Schema for Production-Ready Gym Management Web Application
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum MembershipStatus {
+  ACTIVE
+  EXPIRED
+  PENDING
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  OTHER
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  FAILED
+}
+
+enum AttendanceMethod {
+  QR
+  MEMBER_CODE
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String?
+  role      Role     @default(MEMBER)
+  member    Member?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Member {
+  id              String       @id @default(cuid())
+  userId          String?      @unique
+  user            User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  memberCode      String       @unique
+  name            String
+  phone           String?
+  email           String?
+  memberships     Membership[]
+  payments        Payment[]
+  attendances     Attendance[]
+  progressRecords Progress[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([userId])
+  @@index([memberCode])
+  @@map("members")
+}
+
+model Membership {
+  id         String           @id @default(cuid())
+  memberId   String
+  member     Member           @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  startDate  DateTime
+  expiryDate DateTime
+  monthlyFee Decimal          @db.Decimal(10, 2)
+  status     MembershipStatus @default(ACTIVE)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([memberId])
+  @@index([status])
+  @@map("memberships")
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  memberId      String
+  member        Member        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  amount        Decimal       @db.Decimal(10, 2)
+  month         String // Format: YYYY-MM
+  paymentDate   DateTime      @default(now())
+  paymentMethod PaymentMethod @default(CASH)
+  status        PaymentStatus @default(PAID)
+  createdAt     DateTime      @default(now())
+
+  @@index([memberId])
+  @@index([paymentDate])
+  @@map("payments")
+}
+
+model Attendance {
+  id          String           @id @default(cuid())
+  memberId    String
+  member      Member           @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  checkInTime DateTime         @default(now())
+  method      AttendanceMethod @default(QR)
+  createdAt   DateTime         @default(now())
+
+  @@index([memberId])
+  @@index([checkInTime])
+  @@map("attendances")
+}
+
+model Progress {
+  id        String   @id @default(cuid())
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+  weight    Float? // in kg
+  chest     Float? // in cm
+  waist     Float? // in cm
+  arms      Float? // in cm
+  createdAt DateTime @default(now())
+
+  @@index([memberId])
+  @@index([date])
+  @@map("progress")
+}

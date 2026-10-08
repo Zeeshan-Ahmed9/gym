@@ -1,1 +1,116 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Color Palette */
+    --background: #0B0D0F;
+    --foreground: #F5F7F2;
+
+    --card: #15191D;
+    --card-foreground: #F5F7F2;
+
+    --popover: #15191D;
+    --popover-foreground: #F5F7F2;
+
+    --primary: #B7F34A;
+    --primary-foreground: #0B0D0F;
+    --primary-hover: #A5E434;
+
+    --secondary: #1F252B;
+    --secondary-foreground: #F5F7F2;
+
+    --muted: #1B2025;
+    --muted-foreground: #8B9299;
+
+    --accent: #232930;
+    --accent-foreground: #F5F7F2;
+
+    --border: #232930;
+    --input: #1E2328;
+    --ring: #B7F34A;
+
+    /* Semantic Status Colors */
+    --success: #4ADE80;
+    --success-foreground: #0B0D0F;
+
+    --warning: #FBBF24;
+    --warning-foreground: #0B0D0F;
+
+    --danger: #F87171;
+    --danger-foreground: #0B0D0F;
+
+    /* Radii */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-full: 9999px;
+  }
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+
+  --font-sans: var(--font-plus-jakarta-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar for fitness aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0D0F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232930;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #323A44;
+}
