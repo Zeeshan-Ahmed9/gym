@@ -58,14 +58,14 @@ export function Modal({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-[#17221D]/40 backdrop-blur-xs transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Dialog Content */}
       <div
         className={cn(
-          "relative z-10 w-full rounded-xl border border-border bg-card p-6 shadow-2xl transition-all",
+          "relative z-10 w-full rounded-2xl border border-border bg-card p-6 shadow-xl transition-all",
           maxWidthStyles[maxWidth]
         )}
       >
@@ -81,7 +81,7 @@ export function Modal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            className="rounded-lg p-1 text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors cursor-pointer"
             aria-label="Close"
           >
             <X className="h-4 w-4" />

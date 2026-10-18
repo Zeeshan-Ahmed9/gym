@@ -40,22 +40,22 @@ export function MembersToolbar({
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search members..."
-          className="h-10 w-full rounded-xl border border-border bg-[#15191D] pl-10 pr-4 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          placeholder="Search members by name, code, or phone..."
+          className="h-10 w-full rounded-xl border border-border bg-card pl-10 pr-4 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary shadow-xs"
         />
       </div>
 
       {/* Filter Controls */}
       <div className="flex flex-wrap items-center gap-2.5">
         {/* Status Filter Tabs (All / Active / Expired) */}
-        <div className="flex items-center gap-1 rounded-xl border border-border bg-[#15191D] p-1 text-xs">
+        <div className="flex items-center gap-1 rounded-xl border border-border bg-[#F5F8F6] p-1 text-xs">
           <button
             type="button"
             onClick={() => onStatusFilterChange("ALL")}
             className={cn(
-              "rounded-lg px-3 py-1.5 font-bold transition-all cursor-pointer",
+              "rounded-lg px-3 py-1.5 font-medium transition-all cursor-pointer",
               statusFilter === "ALL"
-                ? "bg-primary text-[#0B0D0F] shadow-sm"
+                ? "bg-card text-foreground font-semibold shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -66,9 +66,9 @@ export function MembersToolbar({
             type="button"
             onClick={() => onStatusFilterChange("ACTIVE")}
             className={cn(
-              "rounded-lg px-3 py-1.5 font-bold transition-all cursor-pointer",
+              "rounded-lg px-3 py-1.5 font-medium transition-all cursor-pointer",
               statusFilter === "ACTIVE"
-                ? "bg-primary text-[#0B0D0F] shadow-sm"
+                ? "bg-card text-foreground font-semibold shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -79,9 +79,9 @@ export function MembersToolbar({
             type="button"
             onClick={() => onStatusFilterChange("EXPIRED")}
             className={cn(
-              "rounded-lg px-3 py-1.5 font-bold transition-all cursor-pointer",
+              "rounded-lg px-3 py-1.5 font-medium transition-all cursor-pointer",
               statusFilter === "EXPIRED"
-                ? "bg-primary text-[#0B0D0F] shadow-sm"
+                ? "bg-card text-foreground font-semibold shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -98,9 +98,9 @@ export function MembersToolbar({
             id="fee-filter"
             value={feeFilter}
             onChange={(e) => onFeeFilterChange(e.target.value as FeeFilter)}
-            className="h-9 rounded-xl border border-border bg-[#15191D] px-3 text-xs font-semibold text-foreground transition-colors focus:border-primary focus:outline-none cursor-pointer"
+            className="h-10 rounded-xl border border-border bg-card px-3 text-xs font-medium text-foreground transition-colors focus:border-primary focus:outline-none cursor-pointer shadow-xs"
           >
-            <option value="ALL">All Fees</option>
+            <option value="ALL">All Fee Statuses</option>
             <option value="PAID">Paid</option>
             <option value="DUE">Due ({counts.feeDue})</option>
           </select>

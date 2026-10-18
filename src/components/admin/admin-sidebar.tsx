@@ -61,7 +61,7 @@ export function AdminSidebar({
   ];
 
   const sidebarContent = (
-    <div className="flex h-full flex-col justify-between p-4 bg-[#0B0D0F]">
+    <div className="flex h-full flex-col justify-between p-4 bg-card">
       {/* Top: Logo & Nav */}
       <div className="space-y-6">
         {/* Brand Logo & Name */}
@@ -70,18 +70,16 @@ export function AdminSidebar({
             href="/admin"
             className="flex items-center gap-3 group transition-opacity hover:opacity-90"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card border border-border text-primary shadow-inner">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pale-mint border border-primary/20 text-primary shadow-xs">
               <Dumbbell className="h-5 w-5" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-base font-extrabold tracking-tight text-foreground">
-                  FitFlow
-                </span>
-              </div>
-              <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
-                IRONPULSE GYM
-              </p>
+              <span className="text-base font-bold tracking-tight text-foreground block leading-tight">
+                PulseGym
+              </span>
+              <span className="text-xs text-muted-foreground font-medium">
+                Admin Center
+              </span>
             </div>
           </Link>
 
@@ -90,7 +88,7 @@ export function AdminSidebar({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg p-1.5 text-muted-foreground hover:bg-card hover:text-foreground md:hidden"
+              className="rounded-lg p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground md:hidden cursor-pointer"
               aria-label="Close navigation"
             >
               <X className="h-5 w-5" />
@@ -99,7 +97,7 @@ export function AdminSidebar({
         </div>
 
         {/* Navigation Items */}
-        <nav className="space-y-1.5 pt-2">
+        <nav className="space-y-1 pt-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -108,16 +106,16 @@ export function AdminSidebar({
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "flex items-center gap-3.5 rounded-xl px-3.5 py-3 text-sm font-semibold transition-all duration-150 select-none",
+                  "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors select-none",
                   item.isActive
-                    ? "bg-primary text-[#0B0D0F] shadow-sm font-bold"
-                    : "text-muted-foreground hover:bg-card hover:text-foreground active:scale-[0.98]"
+                    ? "bg-pale-mint text-primary font-semibold"
+                    : "text-muted-foreground hover:bg-[#F5F8F6] hover:text-foreground"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-4 w-4 shrink-0 transition-colors",
-                    item.isActive ? "text-[#0B0D0F]" : "text-muted-foreground"
+                    item.isActive ? "text-primary" : "text-muted-foreground"
                   )}
                 />
                 <span>{item.label}</span>
@@ -127,21 +125,11 @@ export function AdminSidebar({
         </nav>
       </div>
 
-      {/* Bottom: System Status */}
-      <div className="pt-4 border-t border-border/60">
-        <div className="flex items-center justify-between rounded-xl bg-card/60 border border-border/80 px-3.5 py-2.5">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />
-            </span>
-            <span className="text-[11px] font-bold tracking-wide uppercase text-foreground">
-              KIOSK ACTIVE
-            </span>
-          </div>
-          <span className="rounded-md bg-secondary/80 px-2 py-0.5 text-[10px] font-semibold text-primary">
-            Live
-          </span>
+      {/* Bottom: Subtle Gym Info / Version */}
+      <div className="pt-4 border-t border-border">
+        <div className="px-2 py-1.5 text-xs text-muted-foreground">
+          <p className="font-semibold text-foreground">Front Desk Portal</p>
+          <p className="text-[11px] text-muted-foreground/80 mt-0.5">Management & Operations</p>
         </div>
       </div>
     </div>
@@ -152,7 +140,7 @@ export function AdminSidebar({
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden md:flex md:w-60 lg:w-64 flex-col shrink-0 border-r border-border bg-[#0B0D0F]",
+          "hidden md:flex md:w-60 lg:w-64 flex-col shrink-0 border-r border-border bg-card",
           className
         )}
       >
@@ -163,10 +151,10 @@ export function AdminSidebar({
       {isOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-[#17221D]/40 backdrop-blur-xs transition-opacity"
             onClick={onClose}
           />
-          <div className="relative z-10 w-72 max-w-[85vw] border-r border-border bg-[#0B0D0F] shadow-2xl animate-in slide-in-from-left duration-200">
+          <div className="relative z-10 w-72 max-w-[85vw] border-r border-border bg-card shadow-xl animate-in slide-in-from-left duration-200">
             {sidebarContent}
           </div>
         </div>

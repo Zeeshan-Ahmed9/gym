@@ -14,18 +14,18 @@ export function MembersEmptyState({
 }: MembersEmptyStateProps) {
   if (isFiltered) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-[#15191D]/60 p-12 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary border border-border text-muted-foreground shadow-sm">
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card p-12 text-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-muted-foreground mb-3">
           <Users className="h-6 w-6" />
         </div>
-        <h3 className="mt-4 text-base font-bold text-foreground">
+        <h3 className="text-base font-semibold text-foreground">
           No members found
         </h3>
-        <p className="mt-1.5 max-w-sm text-xs text-muted-foreground leading-relaxed">
+        <p className="mt-1 text-xs text-muted-foreground max-w-sm">
           No members match your current search or filter criteria. Try adjusting your query or resetting filters.
         </p>
         {onResetFilters && (
-          <div className="mt-6">
+          <div className="mt-5">
             <Button
               variant="outline"
               size="sm"
@@ -41,22 +41,22 @@ export function MembersEmptyState({
   }
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-[#15191D]/60 p-14 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary border border-border text-primary shadow-sm">
-        <Users className="h-8 w-8" />
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card p-14 text-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-pale-mint border border-primary/20 text-primary mb-3">
+        <Users className="h-7 w-7" />
       </div>
-      <h3 className="mt-4 text-lg font-bold text-foreground">
+      <h3 className="text-lg font-bold text-foreground">
         No members yet
       </h3>
-      <p className="mt-1.5 max-w-sm text-xs text-muted-foreground leading-relaxed">
+      <p className="mt-1 text-xs text-muted-foreground max-w-sm">
         Add your first member to start tracking attendance and membership.
       </p>
       <div className="mt-6">
         <Link
           href="/admin/members/new"
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-extrabold text-[#0B0D0F] hover:bg-primary-hover active:scale-[0.98] transition-all duration-150 shadow-sm shadow-primary/10 select-none cursor-pointer"
+          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all duration-150 shadow-xs select-none cursor-pointer"
         >
-          <Plus className="h-4 w-4 stroke-[3]" />
+          <Plus className="h-4 w-4 stroke-[2.5]" />
           <span>Add Member</span>
         </Link>
       </div>

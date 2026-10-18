@@ -11,26 +11,26 @@ interface AdminHeaderProps {
 
 export function AdminHeader({
   onOpenMobileMenu,
-  terminalName = "Front Desk 01",
 }: AdminHeaderProps) {
   return (
-    <header className="flex h-16 w-full items-center justify-between border-b border-border bg-[#0B0D0F]/80 px-4 sm:px-6 lg:px-8 backdrop-blur-md">
-      {/* Left: Terminal status indicator & Mobile Menu Trigger */}
+    <header className="flex h-16 w-full items-center justify-between border-b border-border bg-card px-4 sm:px-6 lg:px-8">
+      {/* Left: Mobile Menu Trigger & Gym Label */}
       <div className="flex items-center gap-3">
         {onOpenMobileMenu && (
           <button
             type="button"
             onClick={onOpenMobileMenu}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground md:hidden transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground hover:bg-secondary hover:text-foreground md:hidden transition-colors cursor-pointer"
             aria-label="Open sidebar navigation"
           >
             <Menu className="h-5 w-5" />
           </button>
         )}
 
-        <div className="flex items-center gap-2 rounded-lg bg-card border border-border/80 px-3 py-1.5 text-xs font-semibold text-muted-foreground">
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">TERMINAL:</span>
-          <span className="text-foreground font-bold">{terminalName}</span>
+        <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="font-semibold text-foreground">PulseGym Main Branch</span>
+          <span>•</span>
+          <span>Operations Portal</span>
         </div>
       </div>
 
@@ -44,15 +44,15 @@ export function AdminHeader({
           <input
             type="text"
             readOnly
-            placeholder="Quick find (Ctrl+K)"
-            className="h-9 w-44 md:w-56 rounded-xl border border-border bg-card pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/70 transition-colors focus:outline-none focus:border-primary/50 cursor-pointer"
+            placeholder="Search roster or check-ins..."
+            className="h-9 w-48 md:w-60 rounded-xl border border-border bg-[#F5F8F6] pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/70 transition-colors focus:outline-none focus:border-primary/50 cursor-pointer"
           />
         </div>
 
         {/* Notification Bell */}
         <button
           type="button"
-          className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground hover:text-foreground hover:border-muted-foreground/40 transition-colors"
+          className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground hover:bg-[#F5F8F6] hover:text-foreground transition-colors cursor-pointer"
           aria-label="Notifications"
         >
           <Bell className="h-4 w-4" />
@@ -60,13 +60,12 @@ export function AdminHeader({
         </button>
 
         {/* Admin Profile Avatar */}
-        <button
-          type="button"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-muted-foreground hover:border-primary/50 transition-colors"
-          aria-label="User Profile"
+        <div
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-pale-mint text-primary font-bold text-xs select-none"
+          title="Admin Profile"
         >
-          <User className="h-4 w-4 text-foreground" />
-        </button>
+          AD
+        </div>
       </div>
     </header>
   );

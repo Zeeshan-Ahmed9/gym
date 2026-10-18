@@ -2,42 +2,48 @@
 
 @layer base {
   :root {
-    /* Color Palette */
-    --background: #0B0D0F;
-    --foreground: #F5F7F2;
+    /* Main Background & Surfaces */
+    --background: #F5F8F6;
+    --foreground: #17221D;
 
-    --card: #15191D;
-    --card-foreground: #F5F7F2;
+    --card: #FFFFFF;
+    --card-foreground: #17221D;
 
-    --popover: #15191D;
-    --popover-foreground: #F5F7F2;
+    --popover: #FFFFFF;
+    --popover-foreground: #17221D;
 
-    --primary: #B7F34A;
-    --primary-foreground: #0B0D0F;
-    --primary-hover: #A5E434;
+    /* Primary Accent: Emerald & Hover */
+    --primary: #00A878;
+    --primary-foreground: #FFFFFF;
+    --primary-hover: #008F65;
 
-    --secondary: #1F252B;
-    --secondary-foreground: #F5F7F2;
+    /* Secondary & Mint Surfaces */
+    --secondary: #F0F4F2;
+    --secondary-foreground: #17221D;
 
-    --muted: #1B2025;
-    --muted-foreground: #8B9299;
+    --pale-mint: #E5F6EF;
+    --pale-mint-foreground: #00A878;
 
-    --accent: #232930;
-    --accent-foreground: #F5F7F2;
+    --muted: #EBF1EE;
+    --muted-foreground: #66736C;
 
-    --border: #232930;
-    --input: #1E2328;
-    --ring: #B7F34A;
+    --accent: #E5F6EF;
+    --accent-foreground: #00A878;
+
+    /* Borders & Inputs */
+    --border: #E3EAE5;
+    --input: #FFFFFF;
+    --ring: #00A878;
 
     /* Semantic Status Colors */
-    --success: #4ADE80;
-    --success-foreground: #0B0D0F;
+    --success: #16865D;
+    --success-foreground: #FFFFFF;
 
-    --warning: #FBBF24;
-    --warning-foreground: #0B0D0F;
+    --warning: #B7791F;
+    --warning-foreground: #FFFFFF;
 
-    --danger: #F87171;
-    --danger-foreground: #0B0D0F;
+    --danger: #D64545;
+    --danger-foreground: #FFFFFF;
 
     /* Radii */
     --radius-sm: 0.375rem;
@@ -64,6 +70,9 @@
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-pale-mint: var(--pale-mint);
+  --color-pale-mint-foreground: var(--pale-mint-foreground);
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -96,21 +105,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar for fitness aesthetic */
+/* Custom scrollbar for clean light aesthetic */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0B0D0F;
+  background: #F5F8F6;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #232930;
+  background: #D3DDD6;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #323A44;
+  background: #BAC8BF;
 }

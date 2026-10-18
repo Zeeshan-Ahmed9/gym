@@ -12,7 +12,7 @@ export function FloorDensityCard({ data, className }: FloorDensityCardProps) {
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-border bg-[#15191D] p-5 shadow-sm",
+        "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5 shadow-xs",
         className
       )}
     >

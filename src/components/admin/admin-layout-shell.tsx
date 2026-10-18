@@ -12,7 +12,7 @@ export function AdminLayoutShell({ children }: AdminLayoutShellProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#0B0D0F] text-foreground">
+    <div className="flex min-h-screen bg-background text-foreground">
       {/* Left Sidebar */}
       <AdminSidebar
         isOpen={isMobileMenuOpen}

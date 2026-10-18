@@ -29,19 +29,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-semibold rounded-lg transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer";
+      "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer";
 
     const variantStyles = {
       primary:
-        "bg-primary text-primary-foreground hover:bg-primary-hover active:scale-[0.98]",
+        "bg-primary text-primary-foreground hover:bg-primary-hover active:scale-[0.98] shadow-xs",
       secondary:
-        "bg-secondary text-secondary-foreground hover:bg-muted active:scale-[0.98]",
+        "bg-pale-mint text-primary hover:bg-[#d5eee3] active:scale-[0.98]",
       outline:
-        "border border-border bg-transparent text-foreground hover:bg-card hover:border-muted-foreground/30 active:scale-[0.98]",
+        "border border-border bg-card text-foreground hover:bg-[#F5F8F6] hover:border-[#BAC8BF] active:scale-[0.98]",
       ghost:
-        "bg-transparent text-foreground hover:bg-card hover:text-foreground active:scale-[0.98]",
+        "bg-transparent text-foreground hover:bg-secondary active:scale-[0.98]",
       danger:
-        "bg-danger text-danger-foreground hover:bg-danger/90 active:scale-[0.98]",
+        "bg-danger text-danger-foreground hover:bg-[#c03939] active:scale-[0.98]",
     };
 
     const sizeStyles = {

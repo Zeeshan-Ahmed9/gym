@@ -4,14 +4,7 @@ import * as React from "react";
 import { X, Search, Check, AlertCircle, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface QuickCheckInModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-type ModalStep = "input" | "found" | "success";
-
-interface DemoMember {
+export interface DemoMember {
   name: string;
   code: string;
   membershipStatus: string;
@@ -19,6 +12,14 @@ interface DemoMember {
   feeStatus: string;
   checkInTime: string;
 }
+
+export interface QuickCheckInModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onCheckInSuccess?: (member: DemoMember) => void;
+}
+
+type ModalStep = "input" | "found" | "success";
 
 const DEMO_MEMBER: DemoMember = {
   name: "Ahmed Khan",
@@ -29,7 +30,11 @@ const DEMO_MEMBER: DemoMember = {
   checkInTime: "Today • 7:32 PM",
 };
 
-export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
+export function QuickCheckInModal({
+  isOpen,
+  onClose,
+  onCheckInSuccess,
+}: QuickCheckInModalProps) {
   const [step, setStep] = React.useState<ModalStep>("input");
   const [memberCode, setMemberCode] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
@@ -93,6 +98,7 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
 
   const handleConfirmCheckIn = () => {
     setStep("success");
+    onCheckInSuccess?.(DEMO_MEMBER);
   };
 
   const handleCancel = () => {
@@ -113,21 +119,21 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-[#17221D]/40 backdrop-blur-xs transition-opacity"
         onClick={handleClose}
       />
 
       {/* Modal Dialog Content */}
       <div
         className={cn(
-          "relative z-10 w-full max-w-[480px] rounded-2xl border border-[#232930] bg-[#15191D] p-6 text-[#F5F7F2] shadow-2xl shadow-black/80 transition-all font-sans"
+          "relative z-10 w-full max-w-[480px] rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl transition-all font-sans"
         )}
       >
         {/* Top-right Close X button */}
         <button
           type="button"
           onClick={handleClose}
-          className="absolute top-5 right-5 rounded-lg border border-[#232930] bg-[#1B2025]/80 p-1.5 text-[#8B9299] hover:border-[#8B9299]/30 hover:bg-[#232930] hover:text-[#F5F7F2] transition-all cursor-pointer"
+          className="absolute top-5 right-5 rounded-lg border border-border bg-card p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground transition-all cursor-pointer"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
@@ -137,11 +143,11 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
         <div className="pr-10 pb-5">
           <h2
             id="quick-check-in-title"
-            className="text-xl font-bold tracking-tight text-[#F5F7F2]"
+            className="text-xl font-bold tracking-tight text-foreground"
           >
             Quick Check-in
           </h2>
-          <p className="mt-1 text-sm text-[#8B9299]">
+          <p className="mt-1 text-sm text-muted-foreground">
             Enter a member&apos;s code to record their attendance.
           </p>
         </div>
@@ -152,19 +158,12 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
             <div className="space-y-2">
               <label
                 htmlFor="member-code-input"
-                className="block text-xs font-semibold uppercase tracking-wider text-[#8B9299]"
+                className="block text-xs font-medium text-muted-foreground"
               >
                 Member Code
               </label>
 
               <div className="relative flex items-center">
-                {/* 123 Icon Badge */}
-                <div className="pointer-events-none absolute left-3.5 flex items-center text-[#8B9299]">
-                  <span className="flex items-center justify-center rounded border border-[#3A424C] bg-[#1E242B] px-1 py-0.5 font-mono text-[10px] font-bold tracking-tighter text-[#8B9299]">
-                    123
-                  </span>
-                </div>
-
                 <input
                   id="member-code-input"
                   ref={inputRef}
@@ -174,10 +173,10 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
                     setMemberCode(e.target.value.toUpperCase());
                     if (errorMessage) setErrorMessage(null);
                   }}
-                  placeholder="GYM-48291"
+                  placeholder="e.g. GYM-48291"
                   aria-label="Enter member code"
                   className={cn(
-                    "h-12 w-full rounded-xl border border-[#232930] bg-[#1A1F24] pl-12 pr-4 font-mono text-sm sm:text-base font-semibold tracking-wider text-[#F5F7F2] placeholder:text-[#8B9299]/40 focus:border-[#B7F34A] focus:outline-none focus:ring-1 focus:ring-[#B7F34A] transition-colors",
+                    "h-12 w-full rounded-xl border border-border bg-card px-4 font-mono text-sm sm:text-base font-semibold tracking-wider text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors",
                     errorMessage && "border-danger focus:border-danger focus:ring-danger"
                   )}
                   autoComplete="off"
@@ -187,14 +186,14 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
 
               {/* Sample codes helper chips */}
               <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
-                <span className="text-[#8B9299]">Sample codes:</span>
+                <span className="text-muted-foreground">Sample codes:</span>
                 <button
                   type="button"
                   onClick={() => {
                     setMemberCode("GYM-48291");
                     setErrorMessage(null);
                   }}
-                  className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+                  className="rounded-full border border-primary/25 bg-pale-mint px-2.5 py-0.5 font-mono text-xs font-semibold text-primary hover:bg-[#d5eee3] transition-colors cursor-pointer"
                 >
                   GYM-48291 (Valid)
                 </button>
@@ -204,19 +203,19 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
                     setMemberCode("GYM-99999");
                     setErrorMessage(null);
                   }}
-                  className="rounded-full border border-danger/30 bg-danger/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-danger hover:bg-danger/20 transition-colors cursor-pointer"
+                  className="rounded-full border border-danger/25 bg-[#FDF2F2] px-2.5 py-0.5 font-mono text-xs font-semibold text-danger hover:bg-[#fae2e2] transition-colors cursor-pointer"
                 >
                   GYM-99999 (Invalid)
                 </button>
               </div>
             </div>
 
-            {/* Error Message: Simple, elegant display */}
+            {/* Error Message */}
             {errorMessage && (
-              <div className="rounded-xl border border-danger/30 bg-danger/10 p-3.5 text-xs sm:text-sm text-danger flex items-start gap-2.5 animate-in fade-in duration-200">
+              <div className="rounded-xl border border-danger/25 bg-[#FDF2F2] p-3 text-xs sm:text-sm text-danger flex items-start gap-2.5 animate-in fade-in duration-200">
                 <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <p className="font-bold">Member not found</p>
+                  <p className="font-semibold">Member not found</p>
                   <p className="text-danger/90 text-xs">
                     Please check the member code and try again.
                   </p>
@@ -227,7 +226,7 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
             {/* Primary button: Find Member */}
             <button
               type="submit"
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-extrabold text-[#0B0D0F] hover:bg-primary-hover active:scale-[0.99] transition-all shadow-md shadow-primary/10 select-none cursor-pointer"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.99] transition-all shadow-xs select-none cursor-pointer"
             >
               <Search className="h-4 w-4 stroke-[2.5]" />
               <span>Find Member</span>
@@ -239,17 +238,17 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
         {step === "found" && (
           <div className="space-y-5 animate-in fade-in duration-200">
             {/* Member Card */}
-            <div className="rounded-xl border border-[#232930] bg-[#1A1F24] p-4 sm:p-5 space-y-4">
+            <div className="rounded-xl border border-border bg-[#F5F8F6] p-4 sm:p-5 space-y-4">
               {/* Member Profile */}
-              <div className="flex items-center gap-3.5 pb-3.5 border-b border-[#232930]/80">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#232930] border border-[#2F3742] text-sm font-extrabold text-[#F5F7F2] shadow-inner">
+              <div className="flex items-center gap-3.5 pb-3.5 border-b border-border">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pale-mint border border-primary/20 text-sm font-bold text-primary">
                   AK
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-extrabold text-[#F5F7F2] truncate">
+                  <h3 className="text-base font-bold text-foreground truncate">
                     {DEMO_MEMBER.name}
                   </h3>
-                  <div className="mt-0.5 inline-flex items-center rounded-md border border-[#232930] bg-[#15191D] px-2 py-0.5 font-mono text-xs font-semibold text-[#8B9299]">
+                  <div className="mt-0.5 inline-flex items-center rounded-md border border-border bg-card px-2 py-0.5 font-mono text-xs font-semibold text-muted-foreground">
                     {DEMO_MEMBER.code}
                   </div>
                 </div>
@@ -259,8 +258,8 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
               <div className="grid grid-cols-2 gap-3.5 text-xs">
                 {/* Membership */}
                 <div className="space-y-1">
-                  <span className="text-[#8B9299] block font-medium">Membership</span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/15 px-2.5 py-0.5 font-bold text-success text-[11px]">
+                  <span className="text-muted-foreground block font-medium">Membership</span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-success/25 bg-[#E5F6EF] px-2.5 py-0.5 font-semibold text-success text-xs">
                     <span className="h-1.5 w-1.5 rounded-full bg-success" />
                     {DEMO_MEMBER.membershipStatus}
                   </span>
@@ -268,16 +267,16 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
 
                 {/* Expiry */}
                 <div className="space-y-1">
-                  <span className="text-[#8B9299] block font-medium">Expiry</span>
-                  <span className="font-semibold text-[#F5F7F2] text-xs sm:text-sm">
+                  <span className="text-muted-foreground block font-medium">Expiry</span>
+                  <span className="font-semibold text-foreground text-xs sm:text-sm">
                     {DEMO_MEMBER.expiryDate}
                   </span>
                 </div>
 
                 {/* Fee Status */}
                 <div className="space-y-1">
-                  <span className="text-[#8B9299] block font-medium">Fee Status</span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/15 px-2.5 py-0.5 font-bold text-success text-[11px]">
+                  <span className="text-muted-foreground block font-medium">Fee Status</span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-success/25 bg-[#E5F6EF] px-2.5 py-0.5 font-semibold text-success text-xs">
                     <span className="h-1.5 w-1.5 rounded-full bg-success" />
                     {DEMO_MEMBER.feeStatus}
                   </span>
@@ -285,8 +284,8 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
 
                 {/* Check-in time */}
                 <div className="space-y-1">
-                  <span className="text-[#8B9299] block font-medium">Check-in time</span>
-                  <div className="flex items-center gap-1.5 font-semibold text-[#F5F7F2] text-xs sm:text-sm">
+                  <span className="text-muted-foreground block font-medium">Check-in time</span>
+                  <div className="flex items-center gap-1.5 font-semibold text-foreground text-xs sm:text-sm">
                     <Clock className="h-3.5 w-3.5 text-primary" />
                     <span>{DEMO_MEMBER.checkInTime}</span>
                   </div>
@@ -299,14 +298,14 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
               <button
                 type="button"
                 onClick={handleConfirmCheckIn}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-extrabold text-[#0B0D0F] hover:bg-primary-hover active:scale-[0.99] transition-all shadow-md shadow-primary/10 select-none cursor-pointer"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.99] transition-all shadow-xs select-none cursor-pointer"
               >
                 <span>Confirm Check-in</span>
               </button>
               <button
                 type="button"
                 onClick={handleCancel}
-                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#232930] bg-[#1A1F24] px-4 text-sm font-semibold text-[#F5F7F2] hover:bg-[#232930] active:scale-[0.99] transition-colors select-none cursor-pointer"
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-medium text-foreground hover:bg-secondary active:scale-[0.99] transition-colors select-none cursor-pointer"
               >
                 <span>Cancel</span>
               </button>
@@ -318,28 +317,28 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
         {step === "success" && (
           <div className="flex flex-col items-center text-center py-2 space-y-4 animate-in fade-in zoom-in-95 duration-200">
             {/* Success Checkmark Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/15 border border-primary/30 text-primary shadow-lg shadow-primary/10">
-              <Check className="h-8 w-8 stroke-[3]" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-pale-mint border border-primary/25 text-primary">
+              <Check className="h-8 w-8 stroke-[2.5]" />
             </div>
 
             {/* Success Heading */}
             <div className="space-y-1">
-              <h3 className="text-xl font-extrabold text-[#F5F7F2] tracking-tight">
+              <h3 className="text-xl font-bold text-foreground tracking-tight">
                 Check-in Successful
               </h3>
             </div>
 
             {/* Member Details */}
-            <div className="w-full rounded-xl border border-[#232930] bg-[#1A1F24] p-4 text-center space-y-2">
-              <div className="text-base font-extrabold text-[#F5F7F2]">
+            <div className="w-full rounded-xl border border-border bg-[#F5F8F6] p-4 text-center space-y-2">
+              <div className="text-base font-bold text-foreground">
                 {DEMO_MEMBER.name}
               </div>
               <div>
-                <span className="inline-flex items-center rounded-md border border-[#232930] bg-[#15191D] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#8B9299]">
+                <span className="inline-flex items-center rounded-md border border-border bg-card px-2.5 py-0.5 font-mono text-xs font-semibold text-muted-foreground">
                   {DEMO_MEMBER.code}
                 </span>
               </div>
-              <div className="flex items-center justify-center gap-1.5 pt-1 text-xs font-medium text-[#8B9299]">
+              <div className="flex items-center justify-center gap-1.5 pt-1 text-xs font-medium text-muted-foreground">
                 <Clock className="h-3.5 w-3.5 text-primary" />
                 <span>{DEMO_MEMBER.checkInTime}</span>
               </div>
@@ -349,7 +348,7 @@ export function QuickCheckInModal({ isOpen, onClose }: QuickCheckInModalProps) {
             <button
               type="button"
               onClick={handleDone}
-              className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-extrabold text-[#0B0D0F] hover:bg-primary-hover active:scale-[0.99] transition-all shadow-md shadow-primary/10 select-none cursor-pointer"
+              className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.99] transition-all shadow-xs select-none cursor-pointer"
             >
               <span>Done</span>
             </button>

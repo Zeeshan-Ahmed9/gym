@@ -6,7 +6,7 @@ export function Table({
   ...props
 }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="relative w-full overflow-auto rounded-lg border border-border">
+    <div className="relative w-full overflow-auto rounded-2xl border border-border bg-card shadow-xs">
       <table
         className={cn("w-full caption-bottom text-sm text-foreground", className)}
         {...props}
@@ -21,7 +21,7 @@ export function TableHeader({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <thead
-      className={cn("border-b border-border bg-card/60", className)}
+      className={cn("border-b border-border bg-[#F5F8F6]/80", className)}
       {...props}
     />
   );
@@ -45,7 +45,7 @@ export function TableFooter({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <tfoot
-      className={cn("border-t border-border bg-card/60 font-medium", className)}
+      className={cn("border-t border-border bg-[#F5F8F6] font-medium", className)}
       {...props}
     />
   );
@@ -58,7 +58,7 @@ export function TableRow({
   return (
     <tr
       className={cn(
-        "border-b border-border/70 transition-colors hover:bg-muted/40 data-[state=selected]:bg-muted",
+        "border-b border-border/80 transition-colors hover:bg-[#F5F8F6]/60 data-[state=selected]:bg-muted",
         className
       )}
       {...props}
@@ -73,7 +73,7 @@ export function TableHead({
   return (
     <th
       className={cn(
-        "h-11 px-4 text-left align-middle text-xs font-bold uppercase tracking-wider text-muted-foreground",
+        "h-11 px-4 text-left align-middle text-xs font-semibold text-muted-foreground",
         className
       )}
       {...props}

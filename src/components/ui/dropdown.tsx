@@ -63,7 +63,7 @@ export function Dropdown({
       {isOpen && (
         <div
           className={cn(
-            "absolute z-50 mt-2 min-w-[180px] rounded-lg border border-border bg-card p-1 shadow-xl focus:outline-none animate-in fade-in-50 zoom-in-95",
+            "absolute z-50 mt-2 min-w-[180px] rounded-xl border border-border bg-card p-1.5 shadow-md focus:outline-none animate-in fade-in-50 zoom-in-95",
             align === "right" ? "right-0" : "left-0"
           )}
         >
@@ -78,10 +78,10 @@ export function Dropdown({
                 }
               }}
               className={cn(
-                "flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition-colors text-left disabled:pointer-events-none disabled:opacity-50",
+                "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium transition-colors text-left disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
                 item.danger
                   ? "text-danger hover:bg-danger/10"
-                  : "text-foreground hover:bg-muted hover:text-foreground"
+                  : "text-foreground hover:bg-secondary hover:text-foreground"
               )}
             >
               {item.icon && <span className="h-4 w-4 shrink-0">{item.icon}</span>}

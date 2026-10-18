@@ -9,17 +9,17 @@ interface MembersTableProps {
 
 export function MembersTable({ members }: MembersTableProps) {
   return (
-    <div className="hidden md:block w-full overflow-hidden rounded-2xl border border-border bg-[#15191D] shadow-sm">
+    <div className="hidden md:block w-full overflow-hidden rounded-2xl border border-border bg-card shadow-xs">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-foreground">
           {/* Table Header */}
-          <thead className="border-b border-border bg-card/40 text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground">
+          <thead className="border-b border-border bg-[#F5F8F6]/80 text-xs font-semibold text-muted-foreground">
             <tr>
               <th scope="col" className="py-3.5 pl-6 pr-3">
-                Member Name
+                Member
               </th>
               <th scope="col" className="px-3 py-3.5">
-                Code
+                Member Code
               </th>
               <th scope="col" className="px-3 py-3.5">
                 Membership
@@ -43,20 +43,20 @@ export function MembersTable({ members }: MembersTableProps) {
           </thead>
 
           {/* Table Body */}
-          <tbody className="divide-y divide-border/30">
+          <tbody className="divide-y divide-border/70">
             {members.map((member) => (
               <tr
                 key={member.id}
-                className="transition-colors hover:bg-card/30"
+                className="transition-colors hover:bg-[#F5F8F6]/60"
               >
                 {/* Member Name & Phone */}
                 <td className="py-4 pl-6 pr-3">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary border border-border text-xs font-extrabold text-foreground shadow-inner">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pale-mint border border-primary/20 text-xs font-bold text-primary">
                       {member.initials}
                     </div>
                     <div>
-                      <div className="font-bold text-foreground">
+                      <div className="font-semibold text-foreground">
                         {member.name}
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -68,7 +68,7 @@ export function MembersTable({ members }: MembersTableProps) {
 
                 {/* Member Code */}
                 <td className="px-3 py-4">
-                  <span className="font-mono text-xs font-semibold text-muted-foreground">
+                  <span className="font-mono text-xs font-medium text-muted-foreground">
                     {member.memberCode}
                   </span>
                 </td>
@@ -76,12 +76,12 @@ export function MembersTable({ members }: MembersTableProps) {
                 {/* Membership Status */}
                 <td className="px-3 py-4">
                   {member.membershipStatus === "ACTIVE" ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-success/15 border border-success/30 px-2.5 py-0.5 text-[11px] font-bold text-success">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E5F6EF] border border-success/25 px-2.5 py-0.5 text-xs font-semibold text-success">
                       <span className="h-1.5 w-1.5 rounded-full bg-success" />
                       Active
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-danger/15 border border-danger/30 px-2.5 py-0.5 text-[11px] font-bold text-danger">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FDF2F2] border border-danger/25 px-2.5 py-0.5 text-xs font-semibold text-danger">
                       <span className="h-1.5 w-1.5 rounded-full bg-danger" />
                       Expired
                     </span>
@@ -90,12 +90,12 @@ export function MembersTable({ members }: MembersTableProps) {
 
                 {/* Expiry Date */}
                 <td className="px-3 py-4">
-                  <div className="text-xs font-semibold text-foreground">
+                  <div className="text-xs font-medium text-foreground">
                     {member.expiryDate}
                   </div>
                   {member.isExpiringSoon && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-warning mt-0.5">
-                      <Clock className="h-2.5 w-2.5" />
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-warning mt-0.5">
+                      <Clock className="h-3 w-3" />
                       Expiring soon
                     </span>
                   )}
@@ -103,7 +103,7 @@ export function MembersTable({ members }: MembersTableProps) {
 
                 {/* Monthly Fee */}
                 <td className="px-3 py-4">
-                  <span className="font-semibold text-xs text-foreground">
+                  <span className="font-medium text-xs text-foreground">
                     {member.monthlyFee}
                   </span>
                 </td>
@@ -111,12 +111,12 @@ export function MembersTable({ members }: MembersTableProps) {
                 {/* Fee Status */}
                 <td className="px-3 py-4">
                   {member.feeStatus === "PAID" ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-success/15 border border-success/30 px-2.5 py-0.5 text-[11px] font-bold text-success">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E5F6EF] border border-success/25 px-2.5 py-0.5 text-xs font-semibold text-success">
                       <CheckCircle2 className="h-3 w-3" />
                       Paid
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/15 border border-warning/30 px-2.5 py-0.5 text-[11px] font-bold text-warning">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FEF7EC] border border-warning/25 px-2.5 py-0.5 text-xs font-semibold text-warning">
                       <AlertCircle className="h-3 w-3" />
                       Due
                     </span>
@@ -135,18 +135,18 @@ export function MembersTable({ members }: MembersTableProps) {
                   <div className="flex items-center justify-end gap-1.5">
                     <Link
                       href={`/admin/members/${member.id}`}
-                      className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs font-bold text-foreground hover:border-primary/40 hover:text-primary transition-colors"
+                      className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-[#F5F8F6] hover:border-[#BAC8BF] transition-colors"
                     >
-                      <Eye className="h-3 w-3" />
+                      <Eye className="h-3.5 w-3.5 text-muted-foreground" />
                       <span>View</span>
                     </Link>
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 rounded-lg border border-border bg-card p-1.5 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-muted-foreground/40 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1 rounded-lg border border-border bg-card p-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-[#F5F8F6] transition-colors cursor-pointer"
                       title="Edit Member"
                       aria-label={`Edit ${member.name}`}
                     >
-                      <Edit2 className="h-3 w-3" />
+                      <Edit2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </td>

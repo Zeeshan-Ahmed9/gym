@@ -20,3 +20,12 @@ export interface PaginatedResponse<T> {
 
 export * from "./dashboard";
 export * from "./member";
+export * from "./attendance";
+export type {
+  FeeRecord,
+  FeesSummaryData,
+  StatusFilterOption,
+  DemoMemberOption,
+  PaymentMethodType,
+} from "./fees";
+export * from "./settings";

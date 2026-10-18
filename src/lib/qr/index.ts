@@ -12,8 +12,8 @@ export async function generateQRCodeDataURL(
     margin: 2,
     width: 320,
     color: {
-      dark: "#B7F34A", // Brand primary lime
-      light: "#15191D", // Brand card dark
+      dark: "#17221D", // Main text dark
+      light: "#FFFFFF", // White background
     },
     ...options,
   };
@@ -34,8 +34,8 @@ export async function generateQRCodeSVG(
     margin: 2,
     width: 320,
     color: {
-      dark: "#B7F34A",
-      light: "#15191D",
+      dark: "#17221D",
+      light: "#FFFFFF",
     },
     ...options,
   };

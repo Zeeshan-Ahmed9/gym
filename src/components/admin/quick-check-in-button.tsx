@@ -5,11 +5,21 @@ import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuickCheckInModal } from "./quick-check-in-modal";
 
+import type { DemoMember } from "./quick-check-in-modal";
+
 interface QuickCheckInButtonProps {
   className?: string;
+  label?: string;
+  icon?: React.ReactNode;
+  onCheckInSuccess?: (member: DemoMember) => void;
 }
 
-export function QuickCheckInButton({ className }: QuickCheckInButtonProps) {
+export function QuickCheckInButton({
+  className,
+  label = "Quick Check-in",
+  icon,
+  onCheckInSuccess,
+}: QuickCheckInButtonProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -18,15 +28,19 @@ export function QuickCheckInButton({ className }: QuickCheckInButtonProps) {
         type="button"
         onClick={() => setIsOpen(true)}
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-extrabold text-[#0B0D0F] hover:bg-primary-hover active:scale-[0.98] transition-all duration-150 shadow-sm shadow-primary/10 select-none cursor-pointer",
+          "inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all duration-150 shadow-xs select-none cursor-pointer",
           className
         )}
       >
-        <Plus className="h-4 w-4 stroke-[3]" />
-        <span>Quick Check-in</span>
+        {icon !== undefined ? icon : <Plus className="h-4 w-4 stroke-[2.5]" />}
+        <span>{label}</span>
       </button>
 
-      <QuickCheckInModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <QuickCheckInModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onCheckInSuccess={onCheckInSuccess}
+      />
     </>
   );
 }

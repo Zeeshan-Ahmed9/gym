@@ -33,20 +33,20 @@ export function SummaryCard({ metric, className }: SummaryCardProps) {
   const getIconWrapperClass = () => {
     switch (metric.iconName) {
       case "attendance":
-        return "bg-primary/15 border border-primary/20";
+        return "bg-pale-mint border border-primary/25";
       case "members":
         return "bg-secondary border border-border";
       case "active":
-        return "bg-success/15 border border-success/20";
+        return "bg-[#E5F6EF] border border-success/25";
       case "fees":
-        return "bg-danger/15 border border-danger/20";
+        return "bg-[#FDF2F2] border border-danger/25";
     }
   };
 
   const renderBadge = () => {
     if (metric.iconName === "attendance") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-md bg-success/15 border border-success/30 px-2 py-0.5 text-[11px] font-bold text-success">
+        <span className="inline-flex items-center gap-1 rounded-full bg-[#E5F6EF] border border-success/25 px-2.5 py-0.5 text-xs font-semibold text-success">
           <TrendingUp className="h-3 w-3" />
           {metric.trendText}
         </span>
@@ -55,7 +55,7 @@ export function SummaryCard({ metric, className }: SummaryCardProps) {
 
     if (metric.iconName === "active") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-md bg-success/15 border border-success/30 px-2 py-0.5 text-[11px] font-bold text-success">
+        <span className="inline-flex items-center gap-1 rounded-full bg-[#E5F6EF] border border-success/25 px-2.5 py-0.5 text-xs font-semibold text-success">
           <Check className="h-3 w-3" />
           {metric.trendText}
         </span>
@@ -64,7 +64,7 @@ export function SummaryCard({ metric, className }: SummaryCardProps) {
 
     if (metric.iconName === "fees") {
       return (
-        <span className="inline-flex items-center gap-1 rounded-md bg-danger/15 border border-danger/30 px-2 py-0.5 text-[11px] font-bold text-danger">
+        <span className="inline-flex items-center gap-1 rounded-full bg-[#FDF2F2] border border-danger/25 px-2.5 py-0.5 text-xs font-semibold text-danger">
           <AlertCircle className="h-3 w-3" />
           {metric.trendText}
         </span>
@@ -73,8 +73,8 @@ export function SummaryCard({ metric, className }: SummaryCardProps) {
 
     // Default for total members
     return (
-      <span className="text-xs text-muted-foreground font-medium">
-        {metric.extraInfo || "Roster Capacity: 72%"}
+      <span className="inline-flex items-center gap-1 rounded-full bg-secondary border border-border px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+        {metric.trendText || "All Active"}
       </span>
     );
   };
@@ -82,18 +82,18 @@ export function SummaryCard({ metric, className }: SummaryCardProps) {
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border bg-[#15191D] p-5 shadow-sm transition-all duration-200 hover:border-border/80 hover:shadow-md",
+        "rounded-2xl border border-border bg-card p-5 shadow-xs transition-all duration-200 hover:border-[#BAC8BF]",
         className
       )}
     >
       {/* Top: Title & Icon */}
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-bold tracking-wider uppercase text-muted-foreground">
+        <span className="text-xs font-semibold text-muted-foreground">
           {metric.title}
         </span>
         <div
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-xl",
+            "flex h-9 w-9 items-center justify-center rounded-xl",
             getIconWrapperClass()
           )}
         >
@@ -103,20 +103,18 @@ export function SummaryCard({ metric, className }: SummaryCardProps) {
 
       {/* Value */}
       <div className="mt-3">
-        <span className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+        <span className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
           {metric.value}
         </span>
       </div>
 
       {/* Bottom Information Row */}
-      <div className="mt-4 flex items-center justify-between gap-2 border-t border-border/40 pt-3">
+      <div className="mt-4 flex items-center justify-between gap-2 border-t border-border pt-3">
         {renderBadge()}
 
         {/* Secondary Info */}
         <span className="text-xs text-muted-foreground truncate">
-          {metric.iconName === "members"
-            ? metric.trendText
-            : metric.extraInfo}
+          {metric.extraInfo}
         </span>
       </div>
     </div>

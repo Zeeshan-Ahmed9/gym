@@ -16,29 +16,26 @@ export function RecentCheckinsCard({
   return (
     <div
       className={cn(
-        "flex flex-col justify-between rounded-2xl border border-border bg-[#15191D] p-5 sm:p-6 shadow-sm",
+        "rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-xs",
         className
       )}
     >
       <div>
         {/* Card Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
           <div className="flex items-center gap-2.5">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />
-            </span>
-            <h3 className="text-base font-extrabold text-foreground tracking-tight">
+            <h3 className="text-base font-bold text-foreground tracking-tight">
               Today&apos;s Check-ins
             </h3>
-            <span className="rounded-full bg-primary/20 border border-primary/30 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-primary">
-              LIVE FEED
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-pale-mint border border-primary/20 px-2.5 py-0.5 text-xs font-semibold text-primary">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              Live Feed
             </span>
           </div>
 
           <Link
             href="/admin/attendance"
-            className="group flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-hover transition-colors"
+            className="group flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary-hover transition-colors"
           >
             <span>View All Attendance</span>
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -46,25 +43,25 @@ export function RecentCheckinsCard({
         </div>
 
         {/* Check-ins Rows */}
-        <div className="divide-y divide-border/30">
+        <div className="divide-y divide-border/60">
           {checkIns.map((item) => (
             <div
               key={item.id}
-              className="flex items-center justify-between py-3.5 transition-colors hover:bg-card/40 rounded-xl px-2 -mx-2"
+              className="flex items-center justify-between py-3.5 transition-colors hover:bg-[#F5F8F6]/60 rounded-xl px-2 -mx-2"
             >
               {/* Member Details with Initials */}
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary border border-border text-xs font-extrabold text-foreground shadow-inner">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pale-mint border border-primary/20 text-xs font-bold text-primary">
                   {item.initials}
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-foreground">
+                  <h4 className="text-sm font-semibold text-foreground">
                     {item.name}
                   </h4>
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <span className="font-medium">{item.memberCode}</span>
+                    <span className="font-mono text-xs">{item.memberCode}</span>
                     <span>•</span>
-                    <span className="text-[11px]">{item.tier}</span>
+                    <span>{item.tier}</span>
                   </div>
                 </div>
               </div>
@@ -73,19 +70,19 @@ export function RecentCheckinsCard({
               <div className="flex items-center gap-3 sm:gap-6">
                 {/* Method Badge */}
                 {item.method === "QR CODE" ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1 text-[11px] font-bold text-primary">
+                  <span className="inline-flex items-center gap-1.5 rounded-lg border border-primary/25 bg-pale-mint px-2.5 py-1 text-xs font-semibold text-primary">
                     <QrCode className="h-3.5 w-3.5" />
-                    <span>QR CODE</span>
+                    <span>QR Code</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/70 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-2.5 py-1 text-xs font-semibold text-muted-foreground">
                     <SlidersHorizontal className="h-3.5 w-3.5" />
-                    <span>MANUAL</span>
+                    <span>Manual</span>
                   </span>
                 )}
 
                 {/* Time */}
-                <span className="text-xs font-semibold text-foreground/80 min-w-[58px] text-right">
+                <span className="text-xs font-medium text-muted-foreground min-w-[58px] text-right">
                   {item.time}
                 </span>
               </div>
