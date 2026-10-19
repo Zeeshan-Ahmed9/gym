@@ -14,6 +14,8 @@ import type {
   StatusFilterOption,
   DemoMemberOption,
 } from "@/types/fees";
+import { format, subMonths, addMonths } from "date-fns";
+import { useRouter } from "next/navigation";
 
 interface FeesViewProps {
   initialSummary: FeesSummaryData;
@@ -21,25 +23,32 @@ interface FeesViewProps {
   demoMembers: DemoMemberOption[];
 }
 
-const AVAILABLE_MONTHS = [
-  "All Months",
-  "November 2024",
-  "October 2024",
-  "September 2024",
-];
-
 export function FeesView({
   initialSummary,
   initialRecords,
   demoMembers,
 }: FeesViewProps) {
-  const [records, setRecords] = React.useState<FeeRecord[]>(initialRecords);
-  const [summary, setSummary] = React.useState<FeesSummaryData>(initialSummary);
+  const router = useRouter();
+
+  // Dynamic available months list around current date
+  const availableMonths = React.useMemo(() => {
+    const now = new Date();
+    const list = ["All Months"];
+    list.push(format(addMonths(now, 1), "MMMM yyyy"));
+    list.push(format(now, "MMMM yyyy"));
+    for (let i = 1; i <= 5; i++) {
+      list.push(format(subMonths(now, i), "MMMM yyyy"));
+    }
+    return list;
+  }, []);
+
+  const records = initialRecords;
+  const summary = initialSummary;
 
   // Filters
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedStatus, setSelectedStatus] = React.useState<StatusFilterOption>("All");
-  const [selectedMonth, setSelectedMonth] = React.useState("November 2024");
+  const [selectedMonth, setSelectedMonth] = React.useState<string>("All Months");
 
   // Modals
   const [isRecordModalOpen, setIsRecordModalOpen] = React.useState(false);
@@ -69,94 +78,12 @@ export function FeesView({
     setIsViewModalOpen(true);
   };
 
-  // Save payment handler
+  // Save payment callback
   const handleSavePayment = (payload: RecordPaymentPayload) => {
-    let updatedRecords: FeeRecord[];
-
-    if (payload.targetRecordId) {
-      // Update existing record
-      updatedRecords = records.map((r) => {
-        if (r.id === payload.targetRecordId) {
-          return {
-            ...r,
-            amount: payload.amount,
-            month: payload.month,
-            paymentDate: payload.paymentDate,
-            method: payload.method,
-            status: "Paid" as const,
-          };
-        }
-        return r;
-      });
-    } else {
-      // Check if there is an existing due/overdue record for this member & month
-      const existingIdx = records.findIndex(
-        (r) =>
-          r.memberId === payload.memberId &&
-          r.month === payload.month &&
-          r.status !== "Paid"
-      );
-
-      if (existingIdx !== -1) {
-        updatedRecords = records.map((r, i) => {
-          if (i === existingIdx) {
-            return {
-              ...r,
-              amount: payload.amount,
-              paymentDate: payload.paymentDate,
-              method: payload.method,
-              status: "Paid" as const,
-            };
-          }
-          return r;
-        });
-      } else {
-        // Create new paid record
-        const newRecord: FeeRecord = {
-          id: `fee-${Date.now()}`,
-          memberId: payload.memberId,
-          memberName: payload.memberName,
-          memberCode: payload.memberCode,
-          initials: payload.memberName
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase()
-            .slice(0, 2),
-          tier: payload.tier,
-          amount: payload.amount,
-          month: payload.month,
-          paymentDate: payload.paymentDate,
-          method: payload.method,
-          status: "Paid",
-        };
-        updatedRecords = [newRecord, ...records];
-      }
-    }
-
-    setRecords(updatedRecords);
-
-    // Update summary values
-    setSummary((prev) => {
-      const newCollected = prev.collectedMonth + payload.amount;
-      const newPending = Math.max(0, prev.pendingDues - payload.amount);
-      const newTotal = prev.totalExpected;
-      const newRate = Math.round((newCollected / (newTotal || 1)) * 100);
-
-      return {
-        ...prev,
-        collectedMonth: newCollected,
-        collectedCount: prev.collectedCount + 1,
-        pendingDues: newPending,
-        dueSoonCount: Math.max(0, prev.dueSoonCount - 1),
-        realizationRate: Math.min(100, newRate),
-      };
-    });
-
-    // Show feedback toast
     setSuccessMessage(
-      `Payment of Rs. ${payload.amount.toLocaleString()} for ${payload.memberName} (${payload.month}) has been recorded.`
+      `Payment of Rs. ${payload.amount.toLocaleString()} for ${payload.memberName} has been saved to the database.`
     );
+    router.refresh();
     setTimeout(() => {
       setSuccessMessage(null);
     }, 4500);
@@ -208,7 +135,7 @@ export function FeesView({
     <div className="space-y-6">
       {/* Success Notification Banner / Toast */}
       {successMessage && (
-        <div className="flex items-center justify-between rounded-xl bg-accent px-4 py-3 text-sm text-success animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="flex items-center justify-between rounded-xl bg-accent border border-primary/25 px-4 py-3 text-sm text-success animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span className="font-medium">{successMessage}</span>
@@ -240,7 +167,7 @@ export function FeesView({
           <button
             type="button"
             onClick={handleOpenNewPayment}
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all shadow-xs cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all shadow-xs cursor-pointer select-none"
           >
             <Plus className="h-4 w-4 stroke-[2.5]" />
             <span>Record Payment</span>
@@ -262,7 +189,7 @@ export function FeesView({
         onStatusChange={setSelectedStatus}
         selectedMonth={selectedMonth}
         onMonthChange={setSelectedMonth}
-        availableMonths={AVAILABLE_MONTHS}
+        availableMonths={availableMonths}
         counts={counts}
       />
 
@@ -280,7 +207,7 @@ export function FeesView({
         onSavePayment={handleSavePayment}
         demoMembers={demoMembers}
         prefilledRecord={prefilledRecord}
-        availableMonths={AVAILABLE_MONTHS}
+        availableMonths={availableMonths}
       />
 
       {/* View Payment Modal */}

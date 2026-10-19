@@ -12,6 +12,7 @@ import { GymProfileCard } from "./gym-profile-card";
 import { MembershipDefaultsCard } from "./membership-defaults-card";
 import { SettingsPreviewCard } from "./settings-preview-card";
 import { SettingsGuidelinesCard } from "./settings-guidelines-card";
+import { updateSettingsAction } from "@/server/actions/settings.actions";
 
 interface SettingsViewProps {
   initialSettings: GymSettings;
@@ -119,11 +120,21 @@ export function SettingsView({ initialSettings }: SettingsViewProps) {
     }
 
     setIsSaving(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    setSavedSettings({ ...settings });
-    setIsSaving(false);
-    setSuccessToast("Settings saved successfully.");
+    try {
+      const res = await updateSettingsAction(settings);
+      if (res.success && res.data) {
+        setSavedSettings({ ...res.data });
+        setSettings({ ...res.data });
+        setSuccessToast("Settings saved successfully.");
+      } else {
+        setSuccessToast(null);
+        alert(res.error || "Failed to save settings.");
+      }
+    } catch {
+      alert("An unexpected error occurred while saving settings.");
+    } finally {
+      setIsSaving(false);
+    }
 
     setTimeout(() => {
       setSuccessToast((current) =>

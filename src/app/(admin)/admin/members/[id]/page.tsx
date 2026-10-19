@@ -1,60 +1,25 @@
-import Link from "next/link";
-import { ArrowLeft, User } from "lucide-react";
+import { notFound } from "next/navigation";
+import { getMemberDetails } from "@/server/services/member.service";
+import { MemberProfileView } from "@/components/admin/members/member-profile-view";
 
 export const metadata = {
   title: "Member Profile",
-  description: "View gym member details",
+  description: "View and manage gym member profile and activity history.",
 };
 
 interface MemberDetailsPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function MemberDetailsPlaceholderPage({
+export default async function MemberDetailsPage({
   params,
 }: MemberDetailsPageProps) {
   const { id } = await params;
+  const details = await getMemberDetails(id);
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Link
-          href="/admin/members"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-          aria-label="Back to Members"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Member Profile
-          </h1>
-          <p className="text-xs text-muted-foreground">
-            Identifier: <span className="font-mono text-primary font-semibold">{id}</span>
-          </p>
-        </div>
-      </div>
+  if (!details) {
+    notFound();
+  }
 
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card p-12 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-pale-mint border border-primary/20 text-primary shadow-xs">
-          <User className="h-6 w-6" />
-        </div>
-        <h3 className="mt-4 text-base font-semibold text-foreground">
-          Member Profile Details
-        </h3>
-        <p className="mt-1.5 max-w-sm text-xs text-muted-foreground leading-relaxed">
-          The comprehensive member profile view with workout logs, fees, and pass QR codes is scheduled for the next phase.
-        </p>
-        <div className="mt-6">
-          <Link
-            href="/admin/members"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Back to Members</span>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+  return <MemberProfileView details={details} />;
 }

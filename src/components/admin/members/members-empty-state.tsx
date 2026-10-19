@@ -1,16 +1,18 @@
+"use client";
+
 import * as React from "react";
-import Link from "next/link";
 import { Users, Plus, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface MembersEmptyStateProps {
   isFiltered?: boolean;
   onResetFilters?: () => void;
+  onAddMemberClick?: () => void;
 }
 
 export function MembersEmptyState({
   isFiltered = false,
   onResetFilters,
+  onAddMemberClick,
 }: MembersEmptyStateProps) {
   if (isFiltered) {
     return (
@@ -26,14 +28,14 @@ export function MembersEmptyState({
         </p>
         {onResetFilters && (
           <div className="mt-5">
-            <Button
-              variant="outline"
-              size="sm"
+            <button
+              type="button"
               onClick={onResetFilters}
-              leftIcon={<RefreshCw className="h-3.5 w-3.5" />}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground hover:bg-[#F5F8F6] transition-colors cursor-pointer"
             >
-              Reset Filters
-            </Button>
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>Reset Filters</span>
+            </button>
           </div>
         )}
       </div>
@@ -49,16 +51,17 @@ export function MembersEmptyState({
         No members yet
       </h3>
       <p className="mt-1 text-xs text-muted-foreground max-w-sm">
-        Add your first member to start tracking attendance and membership.
+        Add your first member to get started.
       </p>
       <div className="mt-6">
-        <Link
-          href="/admin/members/new"
+        <button
+          type="button"
+          onClick={onAddMemberClick}
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all duration-150 shadow-xs select-none cursor-pointer"
         >
           <Plus className="h-4 w-4 stroke-[2.5]" />
           <span>Add Member</span>
-        </Link>
+        </button>
       </div>
     </div>
   );

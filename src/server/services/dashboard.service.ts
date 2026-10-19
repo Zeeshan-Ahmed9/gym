@@ -1,131 +1,220 @@
-import type { DashboardData } from "@/types/dashboard";
+import { prisma } from "@/lib/db";
+import type { DashboardData, CheckInItem, ExpiringMembershipItem } from "@/types/dashboard";
+import { format, startOfDay, endOfDay, addDays, isBefore, differenceInDays } from "date-fns";
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "M";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 /**
- * Service to fetch admin dashboard statistics and activity feeds.
- * Structured to allow seamless swap with live Prisma queries when database is seeded.
+ * Fetch live admin dashboard statistics and real activity feeds from Neon PostgreSQL.
  */
 export async function getAdminDashboardData(): Promise<DashboardData> {
-  // Demo dataset structured exactly as required for production SaaS gym overview
-  return {
-    metrics: {
-      attendance: {
-        title: "TODAY'S ATTENDANCE",
-        value: 87,
-        trendText: "+12% vs yesterday",
-        trendPositive: true,
-        extraInfo: "Peak: 6:00 - 8:30 PM",
-        iconName: "attendance",
-        badgeVariant: "success",
+  try {
+    const now = new Date();
+    const todayStart = startOfDay(now);
+    const todayEnd = endOfDay(now);
+    const currentMonthKey = format(now, "yyyy-MM");
+    const sevenDaysFromNow = addDays(now, 7);
+
+    // 1. Today's Attendance count
+    const todayAttendanceCount = await prisma.attendance.count({
+      where: {
+        checkInTime: {
+          gte: todayStart,
+          lte: todayEnd,
+        },
       },
-      totalMembers: {
-        title: "TOTAL MEMBERS",
-        value: 326,
-        trendText: "+8 this week",
-        trendPositive: true,
-        extraInfo: "Roster Capacity: 72%",
-        iconName: "members",
-        badgeVariant: "muted",
+    });
+
+    // 2. Members with latest memberships and payments
+    const allMembers = await prisma.member.findMany({
+      include: {
+        memberships: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
+        payments: {
+          where: {
+            month: currentMonthKey,
+            status: "PAID",
+          },
+        },
       },
-      activeMembers: {
-        title: "ACTIVE MEMBERS",
-        value: 310,
-        trendText: "95% active rate",
-        trendPositive: true,
-        extraInfo: "16 paused",
-        iconName: "active",
-        badgeVariant: "success",
+    });
+
+    const totalMembers = allMembers.length;
+    let activeMembers = 0;
+    let pendingDuesTotal = 0;
+    let pendingCount = 0;
+
+    const expiringMemberships: ExpiringMembershipItem[] = [];
+
+    for (const member of allMembers) {
+      const latest = member.memberships[0];
+      if (!latest) continue;
+
+      const expiry = new Date(latest.expiryDate);
+      const isExpired = latest.status !== "ACTIVE" || isBefore(expiry, now);
+
+      if (!isExpired) {
+        activeMembers++;
+
+        // Check if expiring within 7 days
+        if (isBefore(expiry, sevenDaysFromNow)) {
+          const daysRemaining = Math.max(0, differenceInDays(expiry, now));
+          expiringMemberships.push({
+            id: `exp-${member.id}`,
+            name: member.name,
+            initials: getInitials(member.name),
+            plan: `Monthly (Rs. ${Number(latest.monthlyFee).toLocaleString()})`,
+            daysRemaining,
+            expiryDate: format(expiry, "dd MMM yyyy"),
+            urgency: daysRemaining <= 3 ? "urgent" : "warning",
+          });
+        }
+      }
+
+      // Check fee dues for current month
+      const hasPaid = member.payments.length > 0;
+      if (!hasPaid) {
+        pendingDuesTotal += Number(latest.monthlyFee);
+        pendingCount++;
+      }
+    }
+
+    const activeRate =
+      totalMembers > 0 ? Math.round((activeMembers / totalMembers) * 100) : 0;
+
+    // 3. Recent check-ins from database
+    const recentAttendances = await prisma.attendance.findMany({
+      include: {
+        member: {
+          include: {
+            memberships: {
+              orderBy: { createdAt: "desc" },
+              take: 1,
+            },
+          },
+        },
       },
-      feesDue: {
-        title: "FEES DUE",
-        value: "Rs. 84,500",
-        trendText: "14 pending",
-        trendPositive: false,
-        extraInfo: "Next batch due in 48h",
-        iconName: "fees",
-        badgeVariant: "danger",
+      orderBy: { checkInTime: "desc" },
+      take: 6,
+    });
+
+    const recentCheckIns: CheckInItem[] = recentAttendances.map((att) => {
+      const latestPlan = att.member.memberships[0];
+      return {
+        id: att.id,
+        name: att.member.name,
+        initials: getInitials(att.member.name),
+        memberCode: att.member.memberCode,
+        tier: latestPlan ? `Monthly Plan` : "General",
+        method: att.method === "QR" ? "QR CODE" : "MANUAL",
+        time: format(new Date(att.checkInTime), "h:mm a"),
+      };
+    });
+
+    return {
+      metrics: {
+        attendance: {
+          title: "TODAY'S ATTENDANCE",
+          value: todayAttendanceCount,
+          trendText: todayAttendanceCount > 0 ? `${todayAttendanceCount} checked in today` : "No check-ins yet",
+          trendPositive: todayAttendanceCount > 0,
+          extraInfo: "Daily verification log",
+          iconName: "attendance",
+          badgeVariant: "success",
+        },
+        totalMembers: {
+          title: "TOTAL MEMBERS",
+          value: totalMembers,
+          trendText: totalMembers > 0 ? `${totalMembers} registered` : "No members yet",
+          trendPositive: true,
+          extraInfo: "Live roster count",
+          iconName: "members",
+          badgeVariant: "muted",
+        },
+        activeMembers: {
+          title: "ACTIVE MEMBERS",
+          value: activeMembers,
+          trendText: `${activeRate}% active rate`,
+          trendPositive: activeMembers > 0,
+          extraInfo: `${totalMembers - activeMembers} expired/inactive`,
+          iconName: "active",
+          badgeVariant: "success",
+        },
+        feesDue: {
+          title: "FEES DUE",
+          value: `Rs. ${pendingDuesTotal.toLocaleString()}`,
+          trendText: `${pendingCount} pending this month`,
+          trendPositive: pendingCount === 0,
+          extraInfo: "Outstanding dues",
+          iconName: "fees",
+          badgeVariant: pendingCount > 0 ? "danger" : "success",
+        },
       },
-    },
-    floorDensity: {
-      currentAthletes: 42,
-      zones: "Main Weight Floor & Cardio Wing",
-      percentage: 58,
-      status: "OPTIMAL ZONE",
-    },
-    recentCheckIns: [
-      {
-        id: "chk-1",
-        name: "Ahmed Khan",
-        initials: "AK",
-        memberCode: "GYM-48291",
-        tier: "Annual Pro",
-        method: "QR CODE",
-        time: "7:32 PM",
+      floorDensity: {
+        currentAthletes: todayAttendanceCount,
+        zones: "Main Weight Floor & Cardio Wing",
+        percentage: Math.min(100, Math.round((todayAttendanceCount / 50) * 100)),
+        status: todayAttendanceCount > 0 ? "OPTIMAL ZONE" : "FLOOR CLEAR",
       },
-      {
-        id: "chk-2",
-        name: "Ali Raza",
-        initials: "AR",
-        memberCode: "GYM-49221",
-        tier: "Strength Tier",
-        method: "MANUAL",
-        time: "7:35 PM",
+      recentCheckIns,
+      expiringMemberships,
+    };
+  } catch (error) {
+    console.error("Failed to fetch dashboard data:", error);
+    return {
+      metrics: {
+        attendance: {
+          title: "TODAY'S ATTENDANCE",
+          value: 0,
+          trendText: "0 vs yesterday",
+          trendPositive: true,
+          extraInfo: "Peak: —",
+          iconName: "attendance",
+          badgeVariant: "success",
+        },
+        totalMembers: {
+          title: "TOTAL MEMBERS",
+          value: 0,
+          trendText: "No members",
+          trendPositive: true,
+          extraInfo: "Roster: 0%",
+          iconName: "members",
+          badgeVariant: "muted",
+        },
+        activeMembers: {
+          title: "ACTIVE MEMBERS",
+          value: 0,
+          trendText: "0% active rate",
+          trendPositive: true,
+          extraInfo: "0 paused",
+          iconName: "active",
+          badgeVariant: "success",
+        },
+        feesDue: {
+          title: "FEES DUE",
+          value: "Rs. 0",
+          trendText: "0 pending",
+          trendPositive: true,
+          extraInfo: "No dues",
+          iconName: "fees",
+          badgeVariant: "success",
+        },
       },
-      {
-        id: "chk-3",
-        name: "Hamza",
-        initials: "HZ",
-        memberCode: "GYM-51231",
-        tier: "Monthly Pass",
-        method: "QR CODE",
-        time: "7:41 PM",
+      floorDensity: {
+        currentAthletes: 0,
+        zones: "Main Weight Floor & Cardio Wing",
+        percentage: 0,
+        status: "FLOOR CLEAR",
       },
-      {
-        id: "chk-4",
-        name: "Bilal Tariq",
-        initials: "BT",
-        memberCode: "GYM-50112",
-        tier: "Quarterly Active",
-        method: "QR CODE",
-        time: "7:46 PM",
-      },
-      {
-        id: "chk-5",
-        name: "Usman Saeed",
-        initials: "US",
-        memberCode: "GYM-47890",
-        tier: "Personal Training",
-        method: "MANUAL",
-        time: "7:50 PM",
-      },
-    ],
-    expiringMemberships: [
-      {
-        id: "exp-1",
-        name: "Ahmed Khan",
-        initials: "AK",
-        plan: "Standard Monthly",
-        daysRemaining: 3,
-        expiryDate: "27 Nov 2024",
-        urgency: "urgent",
-      },
-      {
-        id: "exp-2",
-        name: "Ali",
-        initials: "AL",
-        plan: "Student Athlete",
-        daysRemaining: 5,
-        expiryDate: "29 Nov 2024",
-        urgency: "warning",
-      },
-      {
-        id: "exp-3",
-        name: "Zeeshan Malik",
-        initials: "ZM",
-        plan: "Couples Tier",
-        daysRemaining: 6,
-        expiryDate: "30 Nov 2024",
-        urgency: "warning",
-      },
-    ],
-  };
+      recentCheckIns: [],
+      expiringMemberships: [],
+    };
+  }
 }

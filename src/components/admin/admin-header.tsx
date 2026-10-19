@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Search, Bell, Menu, User } from "lucide-react";
+import { Search, Bell, Menu } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface AdminHeaderProps {
   onOpenMobileMenu?: () => void;
@@ -9,9 +10,17 @@ interface AdminHeaderProps {
   adminName?: string;
 }
 
-export function AdminHeader({
-  onOpenMobileMenu,
-}: AdminHeaderProps) {
+export function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = React.useState("");
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      router.push(`/admin/members?search=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
   return (
     <header className="flex h-16 w-full items-center justify-between border-b border-border bg-card px-4 sm:px-6 lg:px-8">
       {/* Left: Mobile Menu Trigger & Gym Label */}
@@ -28,30 +37,32 @@ export function AdminHeader({
         )}
 
         <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="font-semibold text-foreground">PulseGym Main Branch</span>
+          <span className="font-semibold text-foreground">PulseGym Admin Center</span>
           <span>•</span>
-          <span>Operations Portal</span>
+          <span>Operations & Management</span>
         </div>
       </div>
 
       {/* Right: Quick Find, Notification, Profile */}
       <div className="flex items-center gap-2.5 sm:gap-3">
         {/* Quick Find (Search) */}
-        <div className="relative hidden sm:flex items-center">
+        <form onSubmit={handleSearchSubmit} className="relative hidden sm:flex items-center">
           <div className="pointer-events-none absolute left-3 text-muted-foreground">
             <Search className="h-3.5 w-3.5" />
           </div>
           <input
             type="text"
-            readOnly
-            placeholder="Search roster or check-ins..."
-            className="h-9 w-48 md:w-60 rounded-xl border border-border bg-[#F5F8F6] pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/70 transition-colors focus:outline-none focus:border-primary/50 cursor-pointer"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search members (Enter)..."
+            className="h-9 w-48 md:w-60 rounded-xl border border-border bg-[#F5F8F6] pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/70 transition-colors focus:outline-none focus:bg-card focus:border-primary/50"
           />
-        </div>
+        </form>
 
         {/* Notification Bell */}
         <button
           type="button"
+          onClick={() => alert("All systems operational. No unread alerts.")}
           className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground hover:bg-[#F5F8F6] hover:text-foreground transition-colors cursor-pointer"
           aria-label="Notifications"
         >

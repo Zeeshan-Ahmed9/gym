@@ -1,13 +1,22 @@
+"use client";
+
 import * as React from "react";
-import Link from "next/link";
-import { CheckCircle2, AlertCircle, Clock, Edit2, Eye } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock, Edit2, Eye, Trash2 } from "lucide-react";
 import type { MemberListItem } from "@/types/member";
 
 interface MembersTableProps {
   members: MemberListItem[];
+  onViewMember?: (id: string) => void;
+  onEditMember?: (member: MemberListItem) => void;
+  onDeleteMember?: (member: MemberListItem) => void;
 }
 
-export function MembersTable({ members }: MembersTableProps) {
+export function MembersTable({
+  members,
+  onViewMember,
+  onEditMember,
+  onDeleteMember,
+}: MembersTableProps) {
   return (
     <div className="hidden md:block w-full overflow-hidden rounded-2xl border border-border bg-card shadow-xs">
       <div className="overflow-x-auto">
@@ -47,16 +56,19 @@ export function MembersTable({ members }: MembersTableProps) {
             {members.map((member) => (
               <tr
                 key={member.id}
-                className="transition-colors hover:bg-[#F5F8F6]/60"
+                className="transition-colors hover:bg-[#F5F8F6]/60 group"
               >
                 {/* Member Name & Phone */}
                 <td className="py-4 pl-6 pr-3">
-                  <div className="flex items-center gap-3">
+                  <div
+                    onClick={() => onViewMember?.(member.id)}
+                    className="flex items-center gap-3 cursor-pointer"
+                  >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pale-mint border border-primary/20 text-xs font-bold text-primary">
                       {member.initials}
                     </div>
                     <div>
-                      <div className="font-semibold text-foreground">
+                      <div className="font-semibold text-foreground hover:text-primary transition-colors">
                         {member.name}
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -133,20 +145,34 @@ export function MembersTable({ members }: MembersTableProps) {
                 {/* Actions */}
                 <td className="py-4 pl-3 pr-6 text-right">
                   <div className="flex items-center justify-end gap-1.5">
-                    <Link
-                      href={`/admin/members/${member.id}`}
-                      className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-[#F5F8F6] hover:border-[#BAC8BF] transition-colors"
+                    <button
+                      type="button"
+                      onClick={() => onViewMember?.(member.id)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-[#F5F8F6] hover:border-[#BAC8BF] transition-colors cursor-pointer"
+                      title="View Member Profile"
                     >
                       <Eye className="h-3.5 w-3.5 text-muted-foreground" />
                       <span>View</span>
-                    </Link>
+                    </button>
+
                     <button
                       type="button"
+                      onClick={() => onEditMember?.(member)}
                       className="inline-flex items-center gap-1 rounded-lg border border-border bg-card p-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-[#F5F8F6] transition-colors cursor-pointer"
                       title="Edit Member"
                       aria-label={`Edit ${member.name}`}
                     >
                       <Edit2 className="h-3.5 w-3.5" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => onDeleteMember?.(member)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-border bg-card p-1.5 text-xs font-medium text-danger/80 hover:text-danger hover:bg-[#FDF2F2] hover:border-danger/30 transition-colors cursor-pointer"
+                      title="Delete Member"
+                      aria-label={`Delete ${member.name}`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </td>

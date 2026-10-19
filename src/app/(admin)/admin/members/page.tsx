@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import * as React from "react";
 import { getMembersList, getMembersStats } from "@/server/services/member.service";
+import { getGymSettings } from "@/server/services/settings.service";
 import { MembersStatsStrip, MembersView } from "@/components/admin/members";
 
 export const metadata = {
@@ -9,41 +9,25 @@ export const metadata = {
 };
 
 export default async function AdminMembersPage() {
-  const [members, stats] = await Promise.all([
+  const [members, stats, settings] = await Promise.all([
     getMembersList(),
     getMembersStats(),
+    getGymSettings(),
   ]);
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Section */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-            Members
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage your gym members and membership status.
-          </p>
-        </div>
-
-        {/* Right Side: + Add Member Button */}
-        <div className="flex items-center gap-2.5">
-          <Link
-            href="/admin/members/new"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all duration-150 shadow-xs select-none cursor-pointer"
-          >
-            <Plus className="h-4 w-4 stroke-[2.5]" />
-            <span>Add Member</span>
-          </Link>
-        </div>
-      </div>
-
-      {/* 2. Top Summary Stats Cards */}
+      {/* 1. Top Summary Stats Cards */}
       <MembersStatsStrip stats={stats} />
 
-      {/* 3. Search, Filter Toolbar, Members Table & Mobile Card View */}
-      <MembersView initialMembers={members} />
+      {/* 2. Search, Filter Toolbar, Members Table & Add/Edit/Delete Modals */}
+      <React.Suspense fallback={<div className="p-8 text-center text-xs text-muted-foreground">Loading members...</div>}>
+        <MembersView
+          initialMembers={members}
+          defaultMonthlyFee={settings.defaultMonthlyFee}
+          defaultDurationMonths={settings.defaultMembershipDurationMonths}
+        />
+      </React.Suspense>
     </div>
   );
 }

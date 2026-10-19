@@ -36,71 +36,85 @@ export function ExpiringMembershipsCard({
         </div>
 
         {/* Expiring List */}
-        <div className="divide-y divide-border/60 pt-1">
-          {expiringMembers.map((item) => (
-            <div key={item.id} className="py-3.5 space-y-2.5">
-              {/* Member & Days Left */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={cn(
-                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border text-xs font-bold",
-                      item.urgency === "urgent"
-                        ? "bg-[#FDF2F2] border-danger/25 text-danger"
-                        : "bg-[#FEF7EC] border-warning/25 text-warning"
-                    )}
-                  >
-                    {item.initials}
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-foreground">
-                      {item.name}
-                    </h4>
-                    <p className="text-xs text-muted-foreground">{item.plan}</p>
-                  </div>
-                </div>
-
-                <span
-                  className={cn(
-                    "rounded-full border px-2.5 py-0.5 text-xs font-semibold",
-                    item.urgency === "urgent"
-                      ? "bg-[#FDF2F2] border-danger/25 text-danger"
-                      : "bg-[#FEF7EC] border-warning/25 text-warning"
-                  )}
-                >
-                  {item.daysRemaining} days left
-                </span>
-              </div>
-
-              {/* Expiry Date & Action */}
-              <div className="flex items-center justify-between pl-12 text-xs">
-                <div className="flex items-center gap-1.5 text-muted-foreground">
-                  <Calendar className="h-3.5 w-3.5 text-muted-foreground/80" />
-                  <span className="text-xs">{item.expiryDate}</span>
-                </div>
-
-                <button
-                  type="button"
-                  className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground hover:bg-[#F5F8F6] hover:border-[#BAC8BF] transition-colors cursor-pointer"
-                >
-                  <Send className="h-3 w-3 text-muted-foreground" />
-                  <span>Send Reminder</span>
-                </button>
-              </div>
+        {expiringMembers.length === 0 ? (
+          <div className="py-12 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E5F6EF] text-primary mb-3">
+              <Calendar className="h-6 w-6" />
             </div>
-          ))}
-        </div>
-      </div>
+            <p className="text-sm font-semibold text-foreground">No upcoming expiries</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              All member plans are currently in good standing.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="divide-y divide-border/60 pt-1">
+              {expiringMembers.map((item) => (
+                <div key={item.id} className="py-3.5 space-y-2.5">
+                  {/* Member & Days Left */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={cn(
+                          "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border text-xs font-bold",
+                          item.urgency === "urgent"
+                            ? "bg-[#FDF2F2] border-danger/25 text-danger"
+                            : "bg-[#FEF7EC] border-warning/25 text-warning"
+                        )}
+                      >
+                        {item.initials}
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground">
+                          {item.name}
+                        </h4>
+                        <p className="text-xs text-muted-foreground">{item.plan}</p>
+                      </div>
+                    </div>
 
-      {/* Bottom Batch Action */}
-      <div className="pt-4 border-t border-border mt-2">
-        <button
-          type="button"
-          className="w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-[#F5F8F6] px-4 py-2.5 text-xs font-semibold text-foreground hover:bg-secondary active:scale-[0.99] transition-all cursor-pointer"
-        >
-          <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
-          <span>Batch Reminder to All Expiring</span>
-        </button>
+                    <span
+                      className={cn(
+                        "rounded-full border px-2.5 py-0.5 text-xs font-semibold",
+                        item.urgency === "urgent"
+                          ? "bg-[#FDF2F2] border-danger/25 text-danger"
+                          : "bg-[#FEF7EC] border-warning/25 text-warning"
+                      )}
+                    >
+                      {item.daysRemaining} days left
+                    </span>
+                  </div>
+
+                  {/* Expiry Date & Action */}
+                  <div className="flex items-center justify-between pl-12 text-xs">
+                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5 text-muted-foreground/80" />
+                      <span className="text-xs">{item.expiryDate}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground hover:bg-[#F5F8F6] hover:border-[#BAC8BF] transition-colors cursor-pointer"
+                    >
+                      <Send className="h-3 w-3 text-muted-foreground" />
+                      <span>Send Reminder</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom Batch Action */}
+            <div className="pt-4 border-t border-border mt-2">
+              <button
+                type="button"
+                className="w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-[#F5F8F6] px-4 py-2.5 text-xs font-semibold text-foreground hover:bg-secondary active:scale-[0.99] transition-all cursor-pointer"
+              >
+                <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>Batch Reminder to All Expiring</span>
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

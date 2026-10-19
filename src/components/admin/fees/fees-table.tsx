@@ -10,7 +10,6 @@ import {
   Clock,
   Calendar,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { FeeRecord } from "@/types/fees";
 
 interface FeesTableProps {

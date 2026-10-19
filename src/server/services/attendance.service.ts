@@ -1,187 +1,228 @@
-import type { AttendanceRecord, AttendanceSummaryData } from "@/types/attendance";
+import { prisma } from "@/lib/db";
+import type { AttendanceRecord, AttendanceSummaryData, DateFilterOption } from "@/types/attendance";
+import { format, startOfDay, endOfDay, startOfMonth, endOfMonth, startOfWeek, endOfWeek, subDays, isBefore } from "date-fns";
 
-/**
- * Service to fetch admin attendance summary metrics and log entries.
- * Structured cleanly to allow direct replacement with Prisma queries when live database is queried.
- */
-export async function getAttendanceSummary(): Promise<AttendanceSummaryData> {
-  return {
-    todayCount: 87,
-    monthCount: 1840,
-    qrPercentage: 82,
-    manualPercentage: 18,
-  };
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "M";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+/**
+ * Fetch live admin attendance summary metrics from Neon PostgreSQL.
+ */
+export async function getAttendanceSummary(): Promise<AttendanceSummaryData> {
+  try {
+    const now = new Date();
+    const todayStart = startOfDay(now);
+    const todayEnd = endOfDay(now);
+    const monthStart = startOfMonth(now);
+    const monthEnd = endOfMonth(now);
+
+    const [todayCount, monthCount, allMonthAttendances] = await Promise.all([
+      prisma.attendance.count({
+        where: {
+          checkInTime: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
+        },
+      }),
+      prisma.attendance.count({
+        where: {
+          checkInTime: {
+            gte: monthStart,
+            lte: monthEnd,
+          },
+        },
+      }),
+      prisma.attendance.findMany({
+        where: {
+          checkInTime: {
+            gte: monthStart,
+            lte: monthEnd,
+          },
+        },
+        select: { method: true },
+      }),
+    ]);
+
+    let qrCount = 0;
+    let manualCount = 0;
+
+    for (const record of allMonthAttendances) {
+      if (record.method === "QR") {
+        qrCount++;
+      } else {
+        manualCount++;
+      }
+    }
+
+    const total = qrCount + manualCount;
+    const qrPercentage = total > 0 ? Math.round((qrCount / total) * 100) : 0;
+    const manualPercentage = total > 0 ? Math.round((manualCount / total) * 100) : 0;
+
+    return {
+      todayCount,
+      monthCount,
+      qrPercentage,
+      manualPercentage,
+    };
+  } catch (error) {
+    console.error("Failed to fetch attendance summary:", error);
+    return {
+      todayCount: 0,
+      monthCount: 0,
+      qrPercentage: 0,
+      manualPercentage: 0,
+    };
+  }
+}
+
+/**
+ * Fetch live attendance log entries from Neon PostgreSQL.
+ */
 export async function getAttendanceRecords(): Promise<AttendanceRecord[]> {
-  return [
-    {
-      id: "att-1",
-      memberId: "mem-1",
-      memberName: "Ahmed Khan",
-      memberCode: "GYM-48291",
-      initials: "AK",
-      checkInTime: "7:32 PM",
-      checkInDate: "Today",
-      method: "QR Code",
-      membershipTier: "Standard Monthly",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "Today",
+  try {
+    const records = await prisma.attendance.findMany({
+      include: {
+        member: {
+          include: {
+            memberships: {
+              orderBy: { createdAt: "desc" },
+              take: 1,
+            },
+          },
+        },
+      },
+      orderBy: { checkInTime: "desc" },
+      take: 100,
+    });
+
+    const now = new Date();
+    const todayStart = startOfDay(now);
+    const todayEnd = endOfDay(now);
+
+    const yesterdayStart = startOfDay(subDays(now, 1));
+    const yesterdayEnd = endOfDay(subDays(now, 1));
+
+    const weekStart = startOfWeek(now, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
+
+    const monthStart = startOfMonth(now);
+    const monthEnd = endOfMonth(now);
+
+    return records.map((record) => {
+      const checkInTime = new Date(record.checkInTime);
+      const member = record.member;
+      const latestMembership = member.memberships[0];
+
+      let dateCategory: DateFilterOption = "This Month";
+      let checkInDateStr = format(checkInTime, "MMM dd");
+
+      if (checkInTime >= todayStart && checkInTime <= todayEnd) {
+        dateCategory = "Today";
+        checkInDateStr = "Today";
+      } else if (checkInTime >= yesterdayStart && checkInTime <= yesterdayEnd) {
+        dateCategory = "Yesterday";
+        checkInDateStr = "Yesterday";
+      } else if (checkInTime >= weekStart && checkInTime <= weekEnd) {
+        dateCategory = "This Week";
+      } else if (checkInTime >= monthStart && checkInTime <= monthEnd) {
+        dateCategory = "This Month";
+      }
+
+      let isExpired = true;
+      if (latestMembership) {
+        const expiry = new Date(latestMembership.expiryDate);
+        isExpired = latestMembership.status !== "ACTIVE" || isBefore(expiry, now);
+      }
+
+      return {
+        id: record.id,
+        memberId: member.id,
+        memberName: member.name,
+        memberCode: member.memberCode,
+        initials: getInitials(member.name),
+        checkInTime: format(checkInTime, "h:mm a"),
+        checkInDate: checkInDateStr,
+        method: record.method === "QR" ? "QR Code" : "Manual",
+        membershipTier: latestMembership ? `Monthly Plan (Rs. ${Number(latestMembership.monthlyFee).toLocaleString()})` : "Standard Member",
+        membershipStatus: isExpired ? "Expired" : "Active",
+        status: "Verified",
+        dateCategory,
+      };
+    });
+  } catch (error) {
+    console.error("Failed to fetch attendance records:", error);
+    return [];
+  }
+}
+
+/**
+ * Record manual check-in for a member by code with duplicate prevention.
+ */
+export async function recordManualCheckIn(memberCode: string) {
+  const code = memberCode.trim().toUpperCase();
+
+  const member = await prisma.member.findUnique({
+    where: { memberCode: code },
+    include: {
+      memberships: {
+        orderBy: { createdAt: "desc" },
+        take: 1,
+      },
     },
-    {
-      id: "att-2",
-      memberId: "mem-2",
-      memberName: "Ali Raza",
-      memberCode: "GYM-49221",
-      initials: "AR",
-      checkInTime: "7:35 PM",
-      checkInDate: "Today",
-      method: "Manual",
-      membershipTier: "Strength Tier",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "Today",
+  });
+
+  if (!member) {
+    throw new Error(`Member with code "${code}" not found.`);
+  }
+
+  const now = new Date();
+  const todayStart = startOfDay(now);
+  const todayEnd = endOfDay(now);
+
+  // Prevent duplicate check-in today
+  const existingToday = await prisma.attendance.findFirst({
+    where: {
+      memberId: member.id,
+      checkInTime: {
+        gte: todayStart,
+        lte: todayEnd,
+      },
     },
-    {
-      id: "att-3",
-      memberId: "mem-3",
-      memberName: "Hamza Sheikh",
-      memberCode: "GYM-51231",
-      initials: "HS",
-      checkInTime: "7:41 PM",
-      checkInDate: "Today",
-      method: "QR Code",
-      membershipTier: "Standard Monthly",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "Today",
+  });
+
+  if (existingToday) {
+    const timeStr = format(new Date(existingToday.checkInTime), "h:mm a");
+    throw new Error(`${member.name} has already checked in today at ${timeStr}.`);
+  }
+
+  const latestMembership = member.memberships[0];
+  let isExpired = true;
+  let expiryDateStr = "No Active Plan";
+  if (latestMembership) {
+    const expiry = new Date(latestMembership.expiryDate);
+    isExpired = latestMembership.status !== "ACTIVE" || isBefore(expiry, now);
+    expiryDateStr = format(expiry, "dd MMM yyyy");
+  }
+
+  const attendance = await prisma.attendance.create({
+    data: {
+      memberId: member.id,
+      checkInTime: now,
+      method: "MEMBER_CODE",
     },
-    {
-      id: "att-4",
-      memberId: "mem-4",
-      memberName: "Bilal Tariq",
-      memberCode: "GYM-50112",
-      initials: "BT",
-      checkInTime: "7:46 PM",
-      checkInDate: "Today",
-      method: "QR Code",
-      membershipTier: "Quarterly Pass",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "Today",
-    },
-    {
-      id: "att-5",
-      memberId: "mem-5",
-      memberName: "Usman Saeed",
-      memberCode: "GYM-47890",
-      initials: "US",
-      checkInTime: "7:50 PM",
-      checkInDate: "Today",
-      method: "Manual",
-      membershipTier: "Personal Training",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "Today",
-    },
-    {
-      id: "att-6",
-      memberId: "mem-6",
-      memberName: "Daniyal Farooq",
-      memberCode: "GYM-52319",
-      initials: "DF",
-      checkInTime: "8:04 PM",
-      checkInDate: "Today",
-      method: "QR Code",
-      membershipTier: "Standard Monthly",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "Today",
-    },
-    {
-      id: "att-7",
-      memberId: "mem-7",
-      memberName: "Zainab Malik",
-      memberCode: "GYM-46102",
-      initials: "ZM",
-      checkInTime: "6:15 PM",
-      checkInDate: "Yesterday",
-      method: "QR Code",
-      membershipTier: "Annual Pro",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "Yesterday",
-    },
-    {
-      id: "att-8",
-      memberId: "mem-8",
-      memberName: "Omar Farooq",
-      memberCode: "GYM-53412",
-      initials: "OF",
-      checkInTime: "5:45 PM",
-      checkInDate: "Yesterday",
-      method: "Manual",
-      membershipTier: "Standard Monthly",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "Yesterday",
-    },
-    {
-      id: "att-9",
-      memberId: "mem-9",
-      memberName: "Fatima Zahra",
-      memberCode: "GYM-48903",
-      initials: "FZ",
-      checkInTime: "8:12 AM",
-      checkInDate: "Oct 06",
-      method: "QR Code",
-      membershipTier: "Strength Tier",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "This Week",
-    },
-    {
-      id: "att-10",
-      memberId: "mem-10",
-      memberName: "Mustafa Kamal",
-      memberCode: "GYM-44219",
-      initials: "MK",
-      checkInTime: "7:10 PM",
-      checkInDate: "Oct 04",
-      method: "QR Code",
-      membershipTier: "Quarterly Pass",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "This Week",
-    },
-    {
-      id: "att-11",
-      memberId: "mem-11",
-      memberName: "Sarah Jenkins",
-      memberCode: "GYM-49811",
-      initials: "SJ",
-      checkInTime: "9:30 AM",
-      checkInDate: "Sep 29",
-      method: "Manual",
-      membershipTier: "Personal Training",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "This Month",
-    },
-    {
-      id: "att-12",
-      memberId: "mem-12",
-      memberName: "Tariq Mehmood",
-      memberCode: "GYM-43110",
-      initials: "TM",
-      checkInTime: "6:50 PM",
-      checkInDate: "Sep 25",
-      method: "QR Code",
-      membershipTier: "Standard Monthly",
-      membershipStatus: "Active",
-      status: "Verified",
-      dateCategory: "This Month",
-    },
-  ];
+  });
+
+  return {
+    id: attendance.id,
+    name: member.name,
+    code: member.memberCode,
+    membershipStatus: isExpired ? "Expired" : "Active",
+    expiryDate: expiryDateStr,
+    checkInTime: `Today • ${format(now, "h:mm a")}`,
+  };
 }

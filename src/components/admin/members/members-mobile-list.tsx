@@ -1,13 +1,22 @@
+"use client";
+
 import * as React from "react";
-import Link from "next/link";
-import { CheckCircle2, AlertCircle, Clock, Eye, Edit2, Calendar, Phone, DollarSign } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock, Eye, Edit2, Calendar, Phone, DollarSign, Trash2 } from "lucide-react";
 import type { MemberListItem } from "@/types/member";
 
 interface MembersMobileListProps {
   members: MemberListItem[];
+  onViewMember?: (id: string) => void;
+  onEditMember?: (member: MemberListItem) => void;
+  onDeleteMember?: (member: MemberListItem) => void;
 }
 
-export function MembersMobileList({ members }: MembersMobileListProps) {
+export function MembersMobileList({
+  members,
+  onViewMember,
+  onEditMember,
+  onDeleteMember,
+}: MembersMobileListProps) {
   return (
     <div className="flex flex-col gap-3 md:hidden">
       {members.map((member) => (
@@ -17,12 +26,15 @@ export function MembersMobileList({ members }: MembersMobileListProps) {
         >
           {/* Header Row: Initials, Name, Code, and Status */}
           <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
+            <div
+              onClick={() => onViewMember?.(member.id)}
+              className="flex items-center gap-3 cursor-pointer"
+            >
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-pale-mint border border-primary/20 text-xs font-bold text-primary">
                 {member.initials}
               </div>
               <div>
-                <h4 className="font-semibold text-foreground text-sm leading-tight">
+                <h4 className="font-semibold text-foreground text-sm leading-tight hover:text-primary transition-colors">
                   {member.name}
                 </h4>
                 <span className="font-mono text-xs font-medium text-muted-foreground mt-0.5 inline-block">
@@ -112,20 +124,30 @@ export function MembersMobileList({ members }: MembersMobileListProps) {
 
           {/* Actions */}
           <div className="flex items-center gap-2 pt-0.5">
-            <Link
-              href={`/admin/members/${member.id}`}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card py-2 text-xs font-medium text-foreground hover:bg-[#F5F8F6] transition-colors"
+            <button
+              type="button"
+              onClick={() => onViewMember?.(member.id)}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card py-2 text-xs font-medium text-foreground hover:bg-[#F5F8F6] transition-colors cursor-pointer"
             >
               <Eye className="h-3.5 w-3.5 text-muted-foreground" />
               <span>View Profile</span>
-            </Link>
+            </button>
             <button
               type="button"
+              onClick={() => onEditMember?.(member)}
               className="inline-flex items-center justify-center gap-1 rounded-xl border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-[#F5F8F6] transition-colors cursor-pointer"
               aria-label={`Edit ${member.name}`}
             >
               <Edit2 className="h-3.5 w-3.5" />
               <span>Edit</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onDeleteMember?.(member)}
+              className="inline-flex items-center justify-center gap-1 rounded-xl border border-danger/25 bg-card px-3 py-2 text-xs font-medium text-danger hover:bg-[#FDF2F2] transition-colors cursor-pointer"
+              aria-label={`Delete ${member.name}`}
+            >
+              <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
