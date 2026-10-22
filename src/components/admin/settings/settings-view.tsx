@@ -5,6 +5,7 @@ import {
   Save,
   RotateCcw,
   CheckCircle2,
+  AlertCircle,
   X,
 } from "lucide-react";
 import type { GymSettings, GymSettingsFormErrors } from "@/types/settings";
@@ -30,6 +31,7 @@ export function SettingsView({ initialSettings }: SettingsViewProps) {
   // Loading & notification states
   const [isSaving, setIsSaving] = React.useState(false);
   const [successToast, setSuccessToast] = React.useState<string | null>(null);
+  const [errorToast, setErrorToast] = React.useState<string | null>(null);
 
   // Compute dirty state
   const isDirty = React.useMemo(() => {
@@ -120,18 +122,22 @@ export function SettingsView({ initialSettings }: SettingsViewProps) {
     }
 
     setIsSaving(true);
+    setSuccessToast(null);
+    setErrorToast(null);
+
     try {
       const res = await updateSettingsAction(settings);
       if (res.success && res.data) {
         setSavedSettings({ ...res.data });
         setSettings({ ...res.data });
         setSuccessToast("Settings saved successfully.");
+        setErrorToast(null);
       } else {
         setSuccessToast(null);
-        alert(res.error || "Failed to save settings.");
+        setErrorToast(res.error || "Failed to save settings.");
       }
     } catch {
-      alert("An unexpected error occurred while saving settings.");
+      setErrorToast("An unexpected error occurred while saving settings.");
     } finally {
       setIsSaving(false);
     }
@@ -147,6 +153,7 @@ export function SettingsView({ initialSettings }: SettingsViewProps) {
   const handleDiscard = () => {
     setSettings({ ...savedSettings });
     setErrors({});
+    setErrorToast(null);
   };
 
   return (
@@ -163,6 +170,24 @@ export function SettingsView({ initialSettings }: SettingsViewProps) {
             onClick={() => setSuccessToast(null)}
             className="rounded-lg p-1 text-success/80 hover:text-success cursor-pointer"
             aria-label="Dismiss message"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      {/* Error Toast */}
+      {errorToast && (
+        <div className="flex items-center justify-between gap-3 rounded-xl bg-[#FDF2F2] border border-danger/25 px-4 py-3 text-sm text-danger animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-danger shrink-0" />
+            <span className="font-medium">{errorToast}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setErrorToast(null)}
+            className="rounded-lg p-1 text-danger/80 hover:text-danger cursor-pointer"
+            aria-label="Dismiss error message"
           >
             <X className="h-4 w-4" />
           </button>

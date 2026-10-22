@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { CheckCircle2, AlertCircle, Clock, Edit2, Eye, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { CheckCircle2, AlertCircle, Clock, Edit2, Eye, Trash2, CreditCard } from "lucide-react";
 import type { MemberListItem } from "@/types/member";
 
 interface MembersTableProps {
@@ -128,10 +129,20 @@ export function MembersTable({
                       Paid
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FEF7EC] border border-warning/25 px-2.5 py-0.5 text-xs font-semibold text-warning">
-                      <AlertCircle className="h-3 w-3" />
-                      Due
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FEF7EC] border border-warning/25 px-2.5 py-0.5 text-xs font-semibold text-warning">
+                        <AlertCircle className="h-3 w-3" />
+                        Due
+                      </span>
+                      <Link
+                        href={`/admin/fees?search=${encodeURIComponent(member.memberCode)}&record=${encodeURIComponent(member.memberCode)}`}
+                        className="inline-flex items-center gap-1 rounded-lg border border-primary/25 bg-[#E5F6EF] px-2 py-0.5 text-[11px] font-semibold text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer"
+                        title="Record payment for this member"
+                      >
+                        <CreditCard className="h-3 w-3" />
+                        <span>Pay</span>
+                      </Link>
+                    </div>
                   )}
                 </td>
 

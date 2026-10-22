@@ -75,7 +75,7 @@ export function AdminSidebar({
             </div>
             <div>
               <span className="text-base font-bold tracking-tight text-foreground block leading-tight">
-                PulseGym
+                IronMan Fitness
               </span>
               <span className="text-xs text-muted-foreground font-medium">
                 Admin Center

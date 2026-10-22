@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { CheckCircle2, AlertCircle, Clock, Eye, Edit2, Calendar, Phone, DollarSign, Trash2 } from "lucide-react";
 import type { MemberListItem } from "@/types/member";
 
@@ -103,10 +104,18 @@ export function MembersMobileList({
                     Paid
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-0.5 rounded-full bg-[#FEF7EC] border border-warning/25 px-1.5 py-0.2 text-[10px] font-semibold text-warning">
-                    <AlertCircle className="h-2.5 w-2.5" />
-                    Due
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-0.5 rounded-full bg-[#FEF7EC] border border-warning/25 px-1.5 py-0.2 text-[10px] font-semibold text-warning">
+                      <AlertCircle className="h-2.5 w-2.5" />
+                      Due
+                    </span>
+                    <Link
+                      href={`/admin/fees?search=${encodeURIComponent(member.memberCode)}&record=${encodeURIComponent(member.memberCode)}`}
+                      className="text-[10px] font-bold text-primary hover:underline"
+                    >
+                      Pay →
+                    </Link>
+                  </div>
                 )}
               </div>
             </div>

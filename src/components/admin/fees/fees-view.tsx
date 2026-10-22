@@ -21,12 +21,16 @@ interface FeesViewProps {
   initialSummary: FeesSummaryData;
   initialRecords: FeeRecord[];
   demoMembers: DemoMemberOption[];
+  initialSearch?: string;
+  initialRecordCode?: string;
 }
 
 export function FeesView({
   initialSummary,
   initialRecords,
   demoMembers,
+  initialSearch = "",
+  initialRecordCode = "",
 }: FeesViewProps) {
   const router = useRouter();
 
@@ -46,13 +50,28 @@ export function FeesView({
   const summary = initialSummary;
 
   // Filters
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState(initialSearch);
   const [selectedStatus, setSelectedStatus] = React.useState<StatusFilterOption>("All");
   const [selectedMonth, setSelectedMonth] = React.useState<string>("All Months");
 
   // Modals
   const [isRecordModalOpen, setIsRecordModalOpen] = React.useState(false);
   const [prefilledRecord, setPrefilledRecord] = React.useState<FeeRecord | null>(null);
+
+  // Auto-open record payment modal if initialRecordCode is provided
+  React.useEffect(() => {
+    if (initialRecordCode) {
+      const match = records.find(
+        (r) =>
+          r.memberCode.toLowerCase() === initialRecordCode.toLowerCase() ||
+          r.memberId === initialRecordCode
+      );
+      if (match) {
+        setPrefilledRecord(match);
+        setIsRecordModalOpen(true);
+      }
+    }
+  }, [initialRecordCode, records]);
 
   const [isViewModalOpen, setIsViewModalOpen] = React.useState(false);
   const [viewRecord, setViewRecord] = React.useState<FeeRecord | null>(null);

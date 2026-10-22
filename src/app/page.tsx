@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Dumbbell, ShieldCheck, Database, LayoutGrid, KeyRound, CheckCircle2, ArrowRight } from "lucide-react";
+import { Dumbbell, ShieldCheck, Database, LayoutGrid, KeyRound, CheckCircle2, ArrowRight, User } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,13 @@ export default function HomePage() {
 
           <div className="flex items-center gap-3">
             <Link
+              href="/member"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 py-2 text-xs sm:text-sm font-semibold text-secondary-foreground hover:bg-[#F5F8F6] hover:text-foreground active:scale-[0.98] transition-all shadow-xs"
+            >
+              <User className="h-4 w-4 text-primary" />
+              <span>Member Section</span>
+            </Link>
+            <Link
               href="/admin"
               className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all shadow-xs"
             >
@@ -81,10 +88,11 @@ export default function HomePage() {
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/admin/members"
+              href="/member"
               className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-secondary-foreground hover:bg-[#F5F8F6] hover:text-foreground active:scale-[0.98] transition-all shadow-xs"
             >
-              <span>Manage Members</span>
+              <User className="h-4 w-4 text-primary" />
+              <span>Member Section</span>
             </Link>
           </div>
         </div>

@@ -1,2 +1,9 @@
-// Member-specific component foundations will be added here in future tasks.
-export {};
+export * from "./member-navbar";
+export * from "./welcome-section";
+export * from "./qr-check-in-card";
+export * from "./qr-scanner-modal";
+export * from "./member-stats-cards";
+export * from "./floor-occupancy-banner";
+export * from "./member-footer";
+export * from "./log-weight-modal";
+export * from "./attendance";

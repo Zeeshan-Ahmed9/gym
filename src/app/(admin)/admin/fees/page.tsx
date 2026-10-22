@@ -10,7 +10,12 @@ export const metadata = {
   description: "Track membership fees, payments, and outstanding dues.",
 };
 
-export default async function AdminFeesPage() {
+export default async function AdminFeesPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ search?: string; record?: string }>;
+}) {
+  const params = searchParams ? await searchParams : {};
   const [summary, records, demoMembers] = await Promise.all([
     getFeesSummary(),
     getFeeRecords(),
@@ -22,6 +27,8 @@ export default async function AdminFeesPage() {
       initialSummary={summary}
       initialRecords={records}
       demoMembers={demoMembers}
+      initialSearch={params?.search || ""}
+      initialRecordCode={params?.record || ""}
     />
   );
 }

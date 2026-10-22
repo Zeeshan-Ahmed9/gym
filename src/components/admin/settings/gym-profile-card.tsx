@@ -83,11 +83,10 @@ export function GymProfileCard({
               value={settings.gymName}
               onChange={(e) => onChange("gymName", e.target.value)}
               placeholder="e.g. IronPulse Gym"
-              className={`flex h-11 w-full rounded-xl border bg-[#F5F8F6] pl-10 pr-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:bg-card focus:outline-none focus:ring-1 ${
-                errors.gymName
+              className={`flex h-11 w-full rounded-xl border bg-[#F5F8F6] pl-10 pr-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:bg-card focus:outline-none focus:ring-1 ${errors.gymName
                   ? "border-danger focus:border-danger focus:ring-danger"
                   : "border-border focus:border-primary focus:ring-primary"
-              }`}
+                }`}
             />
           </div>
           {errors.gymName && (
@@ -207,11 +206,10 @@ export function GymProfileCard({
                   value={settings.phone}
                   onChange={(e) => onChange("phone", e.target.value)}
                   placeholder="e.g. +92 300 9876543"
-                  className={`flex h-11 w-full rounded-xl border bg-[#F5F8F6] pl-10 pr-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:bg-card focus:outline-none focus:ring-1 ${
-                    errors.phone
+                  className={`flex h-11 w-full rounded-xl border bg-[#F5F8F6] pl-10 pr-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:bg-card focus:outline-none focus:ring-1 ${errors.phone
                       ? "border-danger focus:border-danger focus:ring-danger"
                       : "border-border focus:border-primary focus:ring-primary"
-                  }`}
+                    }`}
                 />
               </div>
               {errors.phone && (
@@ -240,11 +238,10 @@ export function GymProfileCard({
                   value={settings.email}
                   onChange={(e) => onChange("email", e.target.value)}
                   placeholder="e.g. admin@ironpulse.fit"
-                  className={`flex h-11 w-full rounded-xl border bg-[#F5F8F6] pl-10 pr-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:bg-card focus:outline-none focus:ring-1 ${
-                    errors.email
+                  className={`flex h-11 w-full rounded-xl border bg-[#F5F8F6] pl-10 pr-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:bg-card focus:outline-none focus:ring-1 ${errors.email
                       ? "border-danger focus:border-danger focus:ring-danger"
                       : "border-border focus:border-primary focus:ring-primary"
-                  }`}
+                    }`}
                 />
               </div>
               {errors.email && (

@@ -37,7 +37,7 @@ export function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
         )}
 
         <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="font-semibold text-foreground">PulseGym Admin Center</span>
+          <span className="font-semibold text-foreground">IronMan Admin Center</span>
           <span>•</span>
           <span>Operations & Management</span>
         </div>

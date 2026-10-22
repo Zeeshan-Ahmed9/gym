@@ -229,28 +229,30 @@ export async function createMember(input: CreateMemberInput) {
   const startDate = new Date(input.startDate);
   const expiryDate = new Date(input.expiryDate);
 
-  return await prisma.$transaction(async (tx) => {
-    const member = await tx.member.create({
-      data: {
-        name: input.name.trim(),
-        phone: input.phone.trim(),
-        email: input.email?.trim() ? input.email.trim().toLowerCase() : null,
-        memberCode: code,
+  const member = await prisma.member.create({
+    data: {
+      name: input.name.trim(),
+      phone: input.phone.trim(),
+      email: input.email?.trim() ? input.email.trim().toLowerCase() : null,
+      memberCode: code,
+      memberships: {
+        create: {
+          startDate,
+          expiryDate,
+          monthlyFee: input.monthlyFee,
+          status: "ACTIVE",
+        },
       },
-    });
-
-    const membership = await tx.membership.create({
-      data: {
-        memberId: member.id,
-        startDate,
-        expiryDate,
-        monthlyFee: input.monthlyFee,
-        status: "ACTIVE",
+    },
+    include: {
+      memberships: {
+        orderBy: { createdAt: "desc" },
+        take: 1,
       },
-    });
-
-    return { member, membership };
+    },
   });
+
+  return { member, membership: member.memberships[0] };
 }
 
 /**
@@ -352,55 +354,53 @@ export interface UpdateMemberInput {
  * Update member information and latest membership details.
  */
 export async function updateMember(input: UpdateMemberInput) {
-  return await prisma.$transaction(async (tx) => {
-    const updatedMember = await tx.member.update({
-      where: { id: input.id },
-      data: {
-        name: input.name.trim(),
-        phone: input.phone.trim(),
-        email: input.email?.trim() ? input.email.trim().toLowerCase() : null,
-      },
-    });
+  const updatedMember = await prisma.member.update({
+    where: { id: input.id },
+    data: {
+      name: input.name.trim(),
+      phone: input.phone.trim(),
+      email: input.email?.trim() ? input.email.trim().toLowerCase() : null,
+    },
+  });
 
-    const latestMembership = await tx.membership.findFirst({
-      where: { memberId: input.id },
-      orderBy: { createdAt: "desc" },
-    });
+  const latestMembership = await prisma.membership.findFirst({
+    where: { memberId: input.id },
+    orderBy: { createdAt: "desc" },
+  });
 
-    if (latestMembership) {
-      const updateData: {
-        monthlyFee?: number;
-        expiryDate?: Date;
-        status?: "ACTIVE" | "EXPIRED";
-      } = {};
+  if (latestMembership) {
+    const updateData: {
+      monthlyFee?: number;
+      expiryDate?: Date;
+      status?: "ACTIVE" | "EXPIRED";
+    } = {};
 
-      if (input.monthlyFee !== undefined) {
-        updateData.monthlyFee = input.monthlyFee;
-      }
-
-      if (input.expiryDate) {
-        const exp = new Date(input.expiryDate);
-        updateData.expiryDate = exp;
-        // Recalculate status consistently
-        if (input.status) {
-          updateData.status = input.status;
-        } else {
-          updateData.status = isBefore(exp, new Date()) ? "EXPIRED" : "ACTIVE";
-        }
-      } else if (input.status) {
-        updateData.status = input.status;
-      }
-
-      if (Object.keys(updateData).length > 0) {
-        await tx.membership.update({
-          where: { id: latestMembership.id },
-          data: updateData,
-        });
-      }
+    if (input.monthlyFee !== undefined) {
+      updateData.monthlyFee = input.monthlyFee;
     }
 
-    return updatedMember;
-  });
+    if (input.expiryDate) {
+      const exp = new Date(input.expiryDate);
+      updateData.expiryDate = exp;
+      // Recalculate status consistently
+      if (input.status) {
+        updateData.status = input.status;
+      } else {
+        updateData.status = isBefore(exp, new Date()) ? "EXPIRED" : "ACTIVE";
+      }
+    } else if (input.status) {
+      updateData.status = input.status;
+    }
+
+    if (Object.keys(updateData).length > 0) {
+      await prisma.membership.update({
+        where: { id: latestMembership.id },
+        data: updateData,
+      });
+    }
+  }
+
+  return updatedMember;
 }
 
 /**
