@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/db";
 import {
   createMember,
   updateMember,
@@ -137,6 +138,65 @@ export async function updateMemberAction(
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to update member.",
+    };
+  }
+}
+
+export async function updateMemberSelfAction(input: {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+}): Promise<ActionResult<{ id: string; name: string; phone: string; email: string }>> {
+  try {
+    if (!input.id) {
+      return { success: false, error: "Member ID is required." };
+    }
+    if (!input.name || !input.name.trim()) {
+      return { success: false, error: "Name cannot be empty." };
+    }
+    if (!input.phone || !input.phone.trim()) {
+      return { success: false, error: "Phone number cannot be empty." };
+    }
+    if (input.email && input.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(input.email.trim())) {
+        return { success: false, error: "Please enter a valid email address." };
+      }
+    }
+
+    const updated = await prisma.member.update({
+      where: { id: input.id },
+      data: {
+        name: input.name.trim(),
+        phone: input.phone.trim(),
+        email: input.email?.trim() ? input.email.trim().toLowerCase() : null,
+      },
+    });
+
+    safeRevalidate([
+      "/member",
+      "/member/profile",
+      "/member/attendance",
+      "/member/progress",
+      "/admin/members",
+      `/admin/members/${input.id}`,
+    ]);
+
+    return {
+      success: true,
+      data: {
+        id: updated.id,
+        name: updated.name,
+        phone: updated.phone || "",
+        email: updated.email || "",
+      },
+    };
+  } catch (error) {
+    console.error("Error in updateMemberSelfAction:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to update profile.",
     };
   }
 }

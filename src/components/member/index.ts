@@ -7,3 +7,4 @@ export * from "./floor-occupancy-banner";
 export * from "./member-footer";
 export * from "./log-weight-modal";
 export * from "./attendance";
+export * from "./profile";

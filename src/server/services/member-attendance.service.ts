@@ -317,12 +317,12 @@ export async function getMemberAttendanceData(options?: {
     let peakBucketName: "Morning" | "Afternoon" | "Evening Peak" | "Night" = "Evening Peak";
     let maxBucketCount = -1;
 
-    (Object.keys(buckets) as Array<keyof typeof buckets>).forEach((key) => {
+    for (const key of Object.keys(buckets) as Array<keyof typeof buckets>) {
       if (buckets[key] > maxBucketCount) {
         maxBucketCount = buckets[key];
         peakBucketName = key;
       }
-    });
+    }
 
     if (eveningMinutes.length > 0) {
       peakTimeLabel = "6:45 PM – 7:35 PM";
