@@ -1,5 +1,5 @@
 import React from "react";
-import { auth } from "@/lib/auth";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { MemberNavbar, MemberFooter } from "@/components/member";
 import { getMemberDashboardData } from "@/server/services/member-dashboard.service";
@@ -9,38 +9,21 @@ export default async function MemberLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const cookieStore = await cookies();
+  const sessionMemberId = cookieStore.get("fitflow_member_session")?.value;
 
-  // Defense-in-depth: require auth in production
-  if (process.env.NODE_ENV === "production" && !session?.user) {
-    redirect("/login");
+  if (!sessionMemberId) {
+    redirect("/member/login");
   }
 
-  const dashboardData = await getMemberDashboardData();
+  const dashboardData = await getMemberDashboardData(sessionMemberId);
 
-  // Fallback defaults if database is momentarily empty
-  const member = dashboardData?.member ?? {
-    id: "guest",
-    name: "Ahmed Khan",
-    firstName: "Ahmed",
-    initials: "AK",
-    memberCode: "GYM-48291",
-    phone: "",
-    email: "",
-  };
+  if (!dashboardData) {
+    redirect("/member/login");
+  }
 
-  const membership = dashboardData?.membership ?? {
-    status: "ACTIVE" as const,
-    planName: "Standard Plan",
-    monthlyFee: 3000,
-    billingPeriod: "/mo",
-    expiryDate: "28 Oct 2026",
-    validTillFormatted: "Valid till 28 Oct 2026",
-    isExpired: false,
-    renewsFormatted: "Renews 24 Nov",
-    feeStatus: "PAID" as const,
-    duesAmount: 0,
-  };
+  const member = dashboardData.member;
+  const membership = dashboardData.membership;
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F5F8F6] font-sans text-foreground">

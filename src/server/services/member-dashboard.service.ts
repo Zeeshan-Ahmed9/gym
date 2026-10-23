@@ -67,7 +67,20 @@ export async function getMemberDashboardData(
   try {
     let memberId = requestedMemberId;
 
-    // 1. Resolve member from session or fallback in dev
+    // 1. Resolve member from fitflow_member_session cookie or auth session
+    if (!memberId) {
+      try {
+        const { cookies } = await import("next/headers");
+        const cookieStore = await cookies();
+        const cookieMemberId = cookieStore.get("fitflow_member_session")?.value;
+        if (cookieMemberId) {
+          memberId = cookieMemberId;
+        }
+      } catch {
+        // outside request scope
+      }
+    }
+
     if (!memberId) {
       try {
         const session = await auth();

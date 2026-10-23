@@ -20,31 +20,45 @@ export async function getAdminDashboardData(): Promise<DashboardData> {
     const currentMonthKey = format(now, "yyyy-MM");
     const sevenDaysFromNow = addDays(now, 7);
 
-    // 1. Today's Attendance count
-    const todayAttendanceCount = await prisma.attendance.count({
-      where: {
-        checkInTime: {
-          gte: todayStart,
-          lte: todayEnd,
-        },
-      },
-    });
-
-    // 2. Members with latest memberships and payments
-    const allMembers = await prisma.member.findMany({
-      include: {
-        memberships: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
-        },
-        payments: {
-          where: {
-            month: currentMonthKey,
-            status: "PAID",
+    // Execute all 3 dashboard queries concurrently in parallel
+    const [todayAttendanceCount, allMembers, recentAttendances] = await Promise.all([
+      prisma.attendance.count({
+        where: {
+          checkInTime: {
+            gte: todayStart,
+            lte: todayEnd,
           },
         },
-      },
-    });
+      }),
+      prisma.member.findMany({
+        include: {
+          memberships: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
+          payments: {
+            where: {
+              month: currentMonthKey,
+              status: "PAID",
+            },
+          },
+        },
+      }),
+      prisma.attendance.findMany({
+        include: {
+          member: {
+            include: {
+              memberships: {
+                orderBy: { createdAt: "desc" },
+                take: 1,
+              },
+            },
+          },
+        },
+        orderBy: { checkInTime: "desc" },
+        take: 6,
+      }),
+    ]);
 
     const totalMembers = allMembers.length;
     let activeMembers = 0;
@@ -88,22 +102,6 @@ export async function getAdminDashboardData(): Promise<DashboardData> {
 
     const activeRate =
       totalMembers > 0 ? Math.round((activeMembers / totalMembers) * 100) : 0;
-
-    // 3. Recent check-ins from database
-    const recentAttendances = await prisma.attendance.findMany({
-      include: {
-        member: {
-          include: {
-            memberships: {
-              orderBy: { createdAt: "desc" },
-              take: 1,
-            },
-          },
-        },
-      },
-      orderBy: { checkInTime: "desc" },
-      take: 6,
-    });
 
     const recentCheckIns: CheckInItem[] = recentAttendances.map((att) => {
       const latestPlan = att.member.memberships[0];

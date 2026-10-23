@@ -3,9 +3,10 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Dumbbell, QrCode } from "lucide-react";
+import { Dumbbell, QrCode, LogOut } from "lucide-react";
 import type { MemberInfo, MembershipDetails } from "@/types/member-dashboard";
 import { QrScannerModal } from "./qr-scanner-modal";
+import { logoutMemberAction } from "@/server/actions/member-auth.actions";
 
 interface MemberNavbarProps {
   member: MemberInfo;
@@ -108,6 +109,21 @@ export function MemberNavbar({ member, membership }: MemberNavbarProps) {
               {membership.status}
             </span>
           </Link>
+
+          {/* Sign Out Button */}
+          <button
+            id="member-signout-btn"
+            type="button"
+            onClick={async () => {
+              await logoutMemberAction();
+              router.push("/member/login");
+              router.refresh();
+            }}
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-[#718078] hover:text-danger hover:border-danger/30 hover:bg-[#FDF2F2] transition-all cursor-pointer shadow-2xs"
+            title="Sign Out / Switch Gym ID"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </div>
 

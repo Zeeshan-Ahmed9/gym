@@ -99,7 +99,20 @@ export async function getMemberAttendanceData(options?: {
   try {
     let memberId = options?.requestedMemberId;
 
-    // 1. Resolve member from session or fallback in dev
+    // 1. Resolve member from fitflow_member_session cookie or auth session
+    if (!memberId) {
+      try {
+        const { cookies } = await import("next/headers");
+        const cookieStore = await cookies();
+        const cookieMemberId = cookieStore.get("fitflow_member_session")?.value;
+        if (cookieMemberId) {
+          memberId = cookieMemberId;
+        }
+      } catch {
+        // outside request scope
+      }
+    }
+
     if (!memberId) {
       try {
         const session = await auth();
@@ -137,7 +150,23 @@ export async function getMemberAttendanceData(options?: {
       return null;
     }
 
-    // 3. Fetch gym settings and member details
+    const now = new Date();
+    const currentMonthStart = startOfMonth(now);
+
+    // Auto-terminate attendance records older than current month from the database
+    try {
+      await prisma.attendance.deleteMany({
+        where: {
+          checkInTime: {
+            lt: currentMonthStart,
+          },
+        },
+      });
+    } catch (cleanupErr) {
+      console.warn("Attendance monthly auto-termination notice:", cleanupErr);
+    }
+
+    // 3. Fetch gym settings and member details (current month attendance only)
     const [gymSettings, member] = await Promise.all([
       getGymSettings(),
       prisma.member.findUnique({
@@ -148,6 +177,11 @@ export async function getMemberAttendanceData(options?: {
             take: 1,
           },
           attendances: {
+            where: {
+              checkInTime: {
+                gte: currentMonthStart,
+              },
+            },
             orderBy: { checkInTime: "asc" },
           },
         },
@@ -158,7 +192,6 @@ export async function getMemberAttendanceData(options?: {
       return null;
     }
 
-    const now = new Date();
     const currentMonthKey = format(now, "yyyy-MM");
     const targetMonthKey = options?.month && /^\d{4}-\d{2}$/.test(options.month)
       ? options.month

@@ -335,8 +335,8 @@ function RecordPaymentForm({
             <input
               id="payment-amount-input"
               type="number"
-              min="1"
-              step="100"
+              min="0"
+              step="any"
               value={amount}
               onChange={(e) => {
                 const val = e.target.value === "" ? "" : Number(e.target.value);

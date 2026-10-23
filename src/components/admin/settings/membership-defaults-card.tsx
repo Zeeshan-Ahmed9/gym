@@ -57,8 +57,8 @@ export function MembershipDefaultsCard({
               <input
                 id="default-monthly-fee-input"
                 type="number"
-                min="1"
-                step="500"
+                min="0"
+                step="any"
                 value={settings.defaultMonthlyFee === 0 ? "" : settings.defaultMonthlyFee}
                 onChange={(e) => {
                   const val = e.target.value === "" ? 0 : Number(e.target.value);

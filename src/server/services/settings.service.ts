@@ -38,11 +38,60 @@ function getGymSettingDelegate(): GymSettingDelegate | null {
   return null;
 }
 
+let cachedSettings: GymSettings | null = null;
+let lastSettingsFetchTime = 0;
+const SETTINGS_CACHE_TTL = 60 * 1000; // 60 seconds
+
 /**
- * Fetch the active gym configuration settings from Neon PostgreSQL.
+ * Invalidate in-memory settings cache.
+ */
+export function invalidateSettingsCache() {
+  cachedSettings = null;
+  lastSettingsFetchTime = 0;
+}
+
+/**
+ * Fetch the active gym configuration settings from Neon PostgreSQL (cached).
  */
 export async function getGymSettings(): Promise<GymSettings> {
+  const now = Date.now();
+  if (cachedSettings && now - lastSettingsFetchTime < SETTINGS_CACHE_TTL) {
+    return cachedSettings;
+  }
+
   try {
+    // Read-only SQL query without write transaction overhead
+    const rows = await prisma.$queryRawUnsafe<Record<string, unknown>[]>(
+      `SELECT * FROM gym_settings WHERE id = 'default' LIMIT 1;`
+    );
+
+    if (rows && rows.length > 0) {
+      const row = rows[0] as {
+        gymName?: string;
+        gymLogo?: string | null;
+        phone?: string;
+        email?: string;
+        address?: string;
+        defaultMonthlyFee?: number | string;
+        defaultMembershipDurationMonths?: number;
+      };
+      const result: GymSettings = {
+        gymName: row.gymName || DEFAULT_GYM_SETTINGS.gymName,
+        gymLogo: row.gymLogo ?? null,
+        phone: row.phone || DEFAULT_GYM_SETTINGS.phone,
+        email: row.email || DEFAULT_GYM_SETTINGS.email,
+        address: row.address || DEFAULT_GYM_SETTINGS.address,
+        defaultMonthlyFee: Number(row.defaultMonthlyFee || DEFAULT_GYM_SETTINGS.defaultMonthlyFee),
+        defaultMembershipDurationMonths: Number(
+          row.defaultMembershipDurationMonths || DEFAULT_GYM_SETTINGS.defaultMembershipDurationMonths
+        ),
+      };
+      cachedSettings = result;
+      lastSettingsFetchTime = now;
+      return result;
+    }
+
+    // If not found yet, initialize once
     const delegate = getGymSettingDelegate();
     if (delegate) {
       const setting = await delegate.upsert({
@@ -60,7 +109,7 @@ export async function getGymSettings(): Promise<GymSettings> {
         },
       });
 
-      return {
+      const result: GymSettings = {
         gymName: setting.gymName,
         gymLogo: setting.gymLogo,
         phone: setting.phone,
@@ -69,40 +118,17 @@ export async function getGymSettings(): Promise<GymSettings> {
         defaultMonthlyFee: Number(setting.defaultMonthlyFee),
         defaultMembershipDurationMonths: setting.defaultMembershipDurationMonths,
       };
+      cachedSettings = result;
+      lastSettingsFetchTime = now;
+      return result;
     }
 
-    // Direct SQL fallback if Prisma model is not yet attached to the client instance
-    const rows = await prisma.$queryRawUnsafe<Record<string, unknown>[]>(
-      `SELECT * FROM gym_settings WHERE id = 'default' LIMIT 1;`
-    );
-
-    if (rows && rows.length > 0) {
-      const row = rows[0] as {
-        gymName?: string;
-        gymLogo?: string | null;
-        phone?: string;
-        email?: string;
-        address?: string;
-        defaultMonthlyFee?: number | string;
-        defaultMembershipDurationMonths?: number;
-      };
-      return {
-        gymName: row.gymName || DEFAULT_GYM_SETTINGS.gymName,
-        gymLogo: row.gymLogo ?? null,
-        phone: row.phone || DEFAULT_GYM_SETTINGS.phone,
-        email: row.email || DEFAULT_GYM_SETTINGS.email,
-        address: row.address || DEFAULT_GYM_SETTINGS.address,
-        defaultMonthlyFee: Number(row.defaultMonthlyFee || DEFAULT_GYM_SETTINGS.defaultMonthlyFee),
-        defaultMembershipDurationMonths: Number(
-          row.defaultMembershipDurationMonths || DEFAULT_GYM_SETTINGS.defaultMembershipDurationMonths
-        ),
-      };
-    }
-
+    cachedSettings = DEFAULT_GYM_SETTINGS;
+    lastSettingsFetchTime = now;
     return DEFAULT_GYM_SETTINGS;
   } catch (error) {
     console.error("Failed to fetch gym settings:", error);
-    return DEFAULT_GYM_SETTINGS;
+    return cachedSettings || DEFAULT_GYM_SETTINGS;
   }
 }
 
@@ -151,7 +177,7 @@ export async function updateGymSettings(
         },
       });
 
-      return {
+      const res: GymSettings = {
         gymName: updated.gymName,
         gymLogo: updated.gymLogo,
         phone: updated.phone,
@@ -160,6 +186,9 @@ export async function updateGymSettings(
         defaultMonthlyFee: Number(updated.defaultMonthlyFee),
         defaultMembershipDurationMonths: updated.defaultMembershipDurationMonths,
       };
+      cachedSettings = res;
+      lastSettingsFetchTime = Date.now();
+      return res;
     }
 
     // Direct SQL fallback if Prisma model is not yet attached to the client instance
@@ -184,7 +213,7 @@ export async function updateGymSettings(
       defaultMembershipDurationMonths
     );
 
-    return {
+    const res: GymSettings = {
       gymName,
       gymLogo,
       phone,
@@ -193,6 +222,9 @@ export async function updateGymSettings(
       defaultMonthlyFee: Number(defaultMonthlyFee),
       defaultMembershipDurationMonths: Number(defaultMembershipDurationMonths),
     };
+    cachedSettings = res;
+    lastSettingsFetchTime = Date.now();
+    return res;
   } catch (error) {
     console.error("Failed to update gym settings:", error);
     throw new Error(

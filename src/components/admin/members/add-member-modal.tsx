@@ -541,8 +541,8 @@ function AddMemberForm({
                 <input
                   id="member-fee-input"
                   type="number"
-                  min="1"
-                  step="100"
+                  min="0"
+                  step="any"
                   value={monthlyFee}
                   onChange={(e) => {
                     const val = e.target.value === "" ? "" : Number(e.target.value);

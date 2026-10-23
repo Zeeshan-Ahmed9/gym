@@ -8,3 +8,4 @@ export * from "./member-footer";
 export * from "./log-weight-modal";
 export * from "./attendance";
 export * from "./profile";
+export * from "./auth/member-login-portal";

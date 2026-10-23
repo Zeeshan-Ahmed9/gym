@@ -7,6 +7,8 @@ export * from "./expiring-memberships-card";
 export * from "./admin-layout-shell";
 export * from "./quick-check-in-modal";
 export * from "./quick-check-in-button";
+export * from "./attendance-qr-kiosk-modal";
+export * from "./attendance-qr-kiosk-button";
 export * from "./attendance";
 export * from "./fees";
 export * from "./settings";

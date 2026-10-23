@@ -23,35 +23,35 @@ export async function getFeesSummary(): Promise<FeesSummaryData> {
     const now = new Date();
     const currentMonthKey = format(now, "yyyy-MM");
 
-    const monthPayments = await prisma.payment.findMany({
-      where: {
-        month: currentMonthKey,
-        status: "PAID",
-      },
-      select: { amount: true },
-    });
+    const [monthPayments, members] = await Promise.all([
+      prisma.payment.findMany({
+        where: {
+          month: currentMonthKey,
+          status: "PAID",
+        },
+        select: { amount: true },
+      }),
+      prisma.member.findMany({
+        include: {
+          memberships: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
+          payments: {
+            where: {
+              month: currentMonthKey,
+              status: "PAID",
+            },
+          },
+        },
+      }),
+    ]);
 
     const collectedMonth = monthPayments.reduce(
       (sum, p) => sum + Number(p.amount),
       0
     );
     const collectedCount = monthPayments.length;
-
-    // Get all members and their latest membership to determine pending dues
-    const members = await prisma.member.findMany({
-      include: {
-        memberships: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
-        },
-        payments: {
-          where: {
-            month: currentMonthKey,
-            status: "PAID",
-          },
-        },
-      },
-    });
 
     let pendingDues = 0;
     let dueSoonCount = 0;
@@ -146,20 +146,33 @@ export async function getFeeRecords(): Promise<FeeRecord[]> {
     const currentMonthKey = format(now, "yyyy-MM");
     const currentMonthLabel = format(now, "MMMM yyyy");
 
-    // 1. Fetch real recorded payments
-    const payments = await prisma.payment.findMany({
-      include: {
-        member: {
-          include: {
-            memberships: {
-              orderBy: { createdAt: "desc" },
-              take: 1,
+    // 1. Fetch payments and members concurrently in parallel
+    const [payments, allMembers] = await Promise.all([
+      prisma.payment.findMany({
+        include: {
+          member: {
+            include: {
+              memberships: {
+                orderBy: { createdAt: "desc" },
+                take: 1,
+              },
             },
           },
         },
-      },
-      orderBy: { paymentDate: "desc" },
-    });
+        orderBy: { paymentDate: "desc" },
+      }),
+      prisma.member.findMany({
+        include: {
+          memberships: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
+          payments: {
+            where: { month: currentMonthKey, status: "PAID" },
+          },
+        },
+      }),
+    ]);
 
     const feeRecords: FeeRecord[] = [];
 
@@ -202,17 +215,6 @@ export async function getFeeRecords(): Promise<FeeRecord[]> {
     }
 
     // 2. Add pending dues for registered members who have not paid for the current month
-    const allMembers = await prisma.member.findMany({
-      include: {
-        memberships: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
-        },
-        payments: {
-          where: { month: currentMonthKey, status: "PAID" },
-        },
-      },
-    });
 
     for (const m of allMembers) {
       if (m.payments.length === 0 && m.memberships[0]) {

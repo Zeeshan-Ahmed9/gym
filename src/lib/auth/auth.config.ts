@@ -21,6 +21,11 @@ export const authConfig = {
         return userRole === "ADMIN";
       }
 
+      // Public Member Login & Activation
+      if (pathname.startsWith("/member/login")) {
+        return true;
+      }
+
       // Protected Member routes
       if (pathname.startsWith("/member")) {
         if (!isLoggedIn) {

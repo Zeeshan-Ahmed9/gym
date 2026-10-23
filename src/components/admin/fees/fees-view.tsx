@@ -57,16 +57,18 @@ export function FeesView({
   // Modals
   const [isRecordModalOpen, setIsRecordModalOpen] = React.useState(false);
   const [prefilledRecord, setPrefilledRecord] = React.useState<FeeRecord | null>(null);
+  const hasOpenedInitialRecordRef = React.useRef(false);
 
-  // Auto-open record payment modal if initialRecordCode is provided
+  // Auto-open record payment modal if initialRecordCode is provided on mount
   React.useEffect(() => {
-    if (initialRecordCode) {
+    if (initialRecordCode && !hasOpenedInitialRecordRef.current) {
       const match = records.find(
         (r) =>
           r.memberCode.toLowerCase() === initialRecordCode.toLowerCase() ||
           r.memberId === initialRecordCode
       );
       if (match) {
+        hasOpenedInitialRecordRef.current = true;
         setPrefilledRecord(match);
         setIsRecordModalOpen(true);
       }
@@ -78,6 +80,17 @@ export function FeesView({
 
   // Success Feedback Toast
   const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
+
+  // Cleanly close record modal and clear URL record parameter
+  const handleCloseRecordModal = () => {
+    setIsRecordModalOpen(false);
+    setPrefilledRecord(null);
+    if (typeof window !== "undefined" && window.location.search.includes("record=")) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("record");
+      window.history.replaceState({}, "", url.toString());
+    }
+  };
 
   // Open modal without prefilled record
   const handleOpenNewPayment = () => {
@@ -99,6 +112,7 @@ export function FeesView({
 
   // Save payment callback
   const handleSavePayment = (payload: RecordPaymentPayload) => {
+    handleCloseRecordModal();
     setSuccessMessage(
       `Payment of Rs. ${payload.amount.toLocaleString()} for ${payload.memberName} has been saved to the database.`
     );
@@ -222,7 +236,7 @@ export function FeesView({
       {/* Record Payment Modal */}
       <RecordPaymentModal
         isOpen={isRecordModalOpen}
-        onClose={() => setIsRecordModalOpen(false)}
+        onClose={handleCloseRecordModal}
         onSavePayment={handleSavePayment}
         demoMembers={demoMembers}
         prefilledRecord={prefilledRecord}

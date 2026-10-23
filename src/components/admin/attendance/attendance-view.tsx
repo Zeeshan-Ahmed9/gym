@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { QuickCheckInButton, type DemoMember } from "@/components/admin";
+import { QuickCheckInButton, AttendanceQrKioskButton, type DemoMember } from "@/components/admin";
 import { AttendanceSummaryCards } from "./attendance-summary-cards";
 import { AttendanceToolbar } from "./attendance-toolbar";
 import { AttendanceTable } from "./attendance-table";
@@ -106,8 +106,9 @@ export function AttendanceView({
           </p>
         </div>
 
-        {/* Header Action: Manual Check-in button */}
+        {/* Header Action: Attendance QR Kiosk & Manual Check-in */}
         <div className="flex items-center gap-2.5">
+          <AttendanceQrKioskButton />
           <QuickCheckInButton
             label="Manual Check-in"
             onCheckInSuccess={handleCheckInSuccess}

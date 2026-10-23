@@ -26,7 +26,7 @@ export default function LoginPage() {
         {/* Portal Shortcuts */}
         <div className="space-y-3 pt-2">
           <Link
-            href="/member"
+            href="/member/login"
             className="flex items-center justify-between rounded-2xl border border-border bg-[#F5F8F6] p-4 hover:border-primary hover:bg-white transition-all shadow-xs group"
           >
             <div className="flex items-center gap-3">

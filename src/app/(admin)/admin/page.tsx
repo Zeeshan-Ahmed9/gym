@@ -4,6 +4,7 @@ import {
   RecentCheckinsCard,
   ExpiringMembershipsCard,
   QuickCheckInButton,
+  AttendanceQrKioskButton,
 } from "@/components/admin";
 
 export const metadata = {
@@ -29,6 +30,7 @@ export default async function AdminDashboardPage() {
 
         {/* Action Controls */}
         <div className="flex items-center gap-2.5">
+          <AttendanceQrKioskButton />
           <QuickCheckInButton />
         </div>
       </div>
