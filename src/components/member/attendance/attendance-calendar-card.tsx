@@ -56,7 +56,7 @@ export function AttendanceCalendarCard({
             <CalendarIcon className="h-4 w-4 stroke-[2.2]" />
           </div>
           <div>
-            <h2 className="text-sm sm:text-base font-extrabold text-[#14211D]">
+            <h2 className="text-sm sm:text-base font-semibold text-foreground">
               {selectedMonthLabel}
             </h2>
             <p className="text-[11px] text-[#718078] font-medium">
@@ -92,7 +92,7 @@ export function AttendanceCalendarCard({
 
       {/* 2. Consistency Matrix Section Title & Legend */}
       <div className="flex items-center justify-between text-xs pt-1">
-        <span className="font-extrabold text-[#14211D]">
+        <span className="font-semibold text-foreground">
           Consistency Matrix
         </span>
         <div className="flex items-center gap-3 text-[11px] text-[#718078]">

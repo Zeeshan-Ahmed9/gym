@@ -46,7 +46,7 @@ export function AttendanceHistoryCard({
       {/* 1. Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/80 pb-4">
         <div>
-          <h2 className="text-base sm:text-lg font-extrabold text-[#14211D]">
+          <h2 className="text-base sm:text-lg font-semibold text-foreground">
             Attendance History Records
           </h2>
           <p className="text-xs text-[#718078] font-medium mt-0.5">
@@ -61,7 +61,7 @@ export function AttendanceHistoryCard({
             <button
               type="button"
               onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-bold text-[#14211D] shadow-2xs hover:bg-[#F5F8F6] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground shadow-2xs hover:bg-[#F5F8F6] transition-colors cursor-pointer"
             >
               <span>{sort === "newest" ? "Newest First" : "Oldest First"}</span>
               <ChevronDown className="h-3.5 w-3.5 text-[#718078]" />
@@ -131,11 +131,11 @@ export function AttendanceHistoryCard({
           <table className="w-full text-left">
             {/* Table Header */}
             <thead>
-              <tr className="border-b border-border/70 text-[11px] font-extrabold uppercase tracking-wider text-[#718078]">
-                <th className="py-2.5 pr-4 pl-1 font-extrabold">DATE & DAY</th>
-                <th className="py-2.5 px-4 font-extrabold">TIME</th>
-                <th className="py-2.5 px-4 font-extrabold">ENTRY METHOD</th>
-                <th className="py-2.5 pr-1 pl-4 text-right font-extrabold">STATUS</th>
+              <tr className="border-b border-border/70 text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
+                <th className="py-2.5 pr-4 pl-1 font-semibold">DATE & DAY</th>
+                <th className="py-2.5 px-4 font-semibold">TIME</th>
+                <th className="py-2.5 px-4 font-semibold">ENTRY METHOD</th>
+                <th className="py-2.5 pr-1 pl-4 text-right font-semibold">STATUS</th>
               </tr>
             </thead>
 
@@ -153,7 +153,7 @@ export function AttendanceHistoryCard({
                         <CalendarIcon className="h-4 w-4 stroke-[2.2]" />
                       </div>
                       <div className="leading-tight">
-                        <span className="font-extrabold text-[#14211D] text-xs sm:text-sm block">
+                        <span className="font-semibold text-foreground text-xs sm:text-sm block">
                           {item.dateFormatted}
                         </span>
                         <span className="text-[11px] text-[#718078] font-medium block">

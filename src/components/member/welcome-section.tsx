@@ -34,7 +34,7 @@ export function WelcomeSection({ member, membership }: WelcomeSectionProps) {
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
       {/* Left: Dynamic Greeting */}
       <div className="space-y-1">
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#14211D]">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
           {greeting}, {member.firstName} 👋
         </h1>
         <p className="text-sm text-[#718078] font-medium">

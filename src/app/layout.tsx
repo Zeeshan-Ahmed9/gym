@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={plusJakartaSans.variable} suppressHydrationWarning>
       <body
-        className="min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground font-sans"
+        className={`${plusJakartaSans.className} min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground font-sans`}
         suppressHydrationWarning
       >
         {children}

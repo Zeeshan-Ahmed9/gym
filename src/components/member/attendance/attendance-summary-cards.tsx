@@ -15,7 +15,7 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
       <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#BAC8BF] transition-all">
         {/* Header Row */}
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078]">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
             THIS MONTH
           </span>
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-primary shadow-2xs">
@@ -26,7 +26,7 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
         {/* Main Metric */}
         <div className="space-y-0.5">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-extrabold tracking-tight text-[#14211D]">
+            <span className="text-3xl font-bold tracking-tight text-foreground">
               {summary.thisMonthVisits}
             </span>
             <span className="text-xs font-semibold text-[#718078]">
@@ -39,7 +39,7 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
         <div className="space-y-2 pt-1">
           <div className="flex items-center justify-between text-xs font-semibold">
             <span className="text-[#718078]">Monthly Target</span>
-            <span className="text-primary font-bold">
+            <span className="text-primary font-semibold">
               {summary.goalPercentage}% Reached
             </span>
           </div>
@@ -56,7 +56,7 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
       <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#BAC8BF] transition-all">
         {/* Header Row */}
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078]">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
             CURRENT STREAK
           </span>
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-primary shadow-2xs">
@@ -67,10 +67,10 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
         {/* Main Metric */}
         <div className="space-y-0.5">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-extrabold tracking-tight text-primary">
+            <span className="text-3xl font-bold tracking-tight text-primary">
               {summary.currentStreak}
             </span>
-            <span className="text-3xl font-extrabold tracking-tight text-[#14211D]">
+            <span className="text-3xl font-bold tracking-tight text-foreground">
               Days
             </span>
           </div>
@@ -81,7 +81,7 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
 
         {/* Bottom Badge: Best streak */}
         <div className="flex items-center justify-end pt-1">
-          <div className="inline-flex items-center rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-bold text-[#14211D] shadow-2xs">
+          <div className="inline-flex items-center rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground shadow-2xs">
             Best: {summary.bestStreak} days
           </div>
         </div>
@@ -91,7 +91,7 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
       <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#BAC8BF] transition-all">
         {/* Header Row */}
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078]">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
             ALL-TIME VISITS
           </span>
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-primary shadow-2xs">
@@ -102,7 +102,7 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
         {/* Main Metric */}
         <div className="space-y-0.5">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-extrabold tracking-tight text-[#14211D]">
+            <span className="text-3xl font-bold tracking-tight text-foreground">
               {summary.allTimeVisits}
             </span>
             <span className="text-xs font-semibold text-[#718078]">
@@ -116,7 +116,7 @@ export function AttendanceSummaryCards({ summary }: AttendanceSummaryCardsProps)
           <span className="text-[#718078] font-medium">
             {summary.membershipTier}
           </span>
-          <span className="rounded-full bg-accent text-success border border-success/20 px-2.5 py-0.5 text-[11px] font-bold">
+          <span className="rounded-full bg-accent text-success border border-success/20 px-2.5 py-0.5 text-[11px] font-semibold">
             {summary.regularBadge}
           </span>
         </div>

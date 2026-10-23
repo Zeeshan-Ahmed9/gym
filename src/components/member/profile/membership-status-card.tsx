@@ -20,7 +20,7 @@ export function MembershipStatusCard({ membership }: MembershipStatusCardProps) 
             <CreditCard className="h-4 w-4 stroke-[2.2]" />
           </div>
           <div>
-            <h3 className="text-base font-extrabold text-[#14211D]">
+            <h3 className="text-base font-semibold text-foreground">
               Membership Subscription
             </h3>
             <p className="text-xs text-[#718078] font-medium">
@@ -31,7 +31,7 @@ export function MembershipStatusCard({ membership }: MembershipStatusCardProps) 
 
         {/* Status Pill */}
         <span
-          className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
+          className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
             membership.status === "ACTIVE"
               ? "bg-accent text-success border border-success/20"
               : "bg-[#FDF2F2] text-danger border border-danger/20"
@@ -44,21 +44,21 @@ export function MembershipStatusCard({ membership }: MembershipStatusCardProps) 
       {/* Plan & Pricing */}
       <div className="flex items-baseline justify-between gap-4">
         <div>
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078] block">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078] block">
             Plan Tier
           </span>
-          <h4 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#14211D]">
+          <h4 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
             {membership.planName}
           </h4>
         </div>
 
         <div className="text-right">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078] block">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078] block">
             Monthly Dues
           </span>
-          <p className="text-xl sm:text-2xl font-extrabold text-primary">
+          <p className="text-xl sm:text-2xl font-bold text-primary">
             Rs. {membership.monthlyFee.toLocaleString()}{" "}
-            <span className="text-xs font-semibold text-[#718078]">
+            <span className="text-xs font-medium text-[#718078]">
               {membership.billingPeriod}
             </span>
           </p>
@@ -72,7 +72,7 @@ export function MembershipStatusCard({ membership }: MembershipStatusCardProps) 
             <Calendar className="h-3.5 w-3.5" />
             <span>Valid Until</span>
           </div>
-          <span className="font-bold text-[#14211D]">
+          <span className="font-semibold text-foreground">
             {membership.expiryDate}
           </span>
         </div>
@@ -83,7 +83,7 @@ export function MembershipStatusCard({ membership }: MembershipStatusCardProps) 
             <span>Payment Status</span>
           </div>
           <span
-            className={`font-bold inline-flex items-center gap-1 ${
+            className={`font-semibold inline-flex items-center gap-1 ${
               isPaid ? "text-success" : "text-warning"
             }`}
           >
@@ -105,7 +105,7 @@ export function MembershipStatusCard({ membership }: MembershipStatusCardProps) 
         <div className="pt-1 space-y-1">
           <div className="flex items-center justify-between text-[11px] text-[#718078] font-medium">
             <span>Cycle Status</span>
-            <span className="text-primary font-bold">Active & Good Standing</span>
+            <span className="text-primary font-semibold">Active & Good Standing</span>
           </div>
           <div className="w-full bg-[#E3EAE5] rounded-full h-1.5 overflow-hidden">
             <div className="bg-primary h-full rounded-full w-4/5" />

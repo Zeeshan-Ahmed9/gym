@@ -9,7 +9,7 @@ export function MemberFooter() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Left: Brand copyright */}
         <div className="flex items-center gap-2">
-          <span className="font-extrabold text-[#14211D]">FitFlow</span>
+          <span className="font-semibold text-foreground">FitFlow</span>
           <span>•</span>
           <span>© {currentYear} FitFlow Portal. All rights reserved.</span>
         </div>

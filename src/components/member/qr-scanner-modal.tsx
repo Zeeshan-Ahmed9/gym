@@ -147,7 +147,7 @@ export function QrScannerModal({
             <QrCode className="h-3.5 w-3.5" />
             <span>Turnstile Check-in</span>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-[#14211D]">
+          <h2 className="text-xl font-bold tracking-tight text-foreground">
             Scan Turnstile QR
           </h2>
           <p className="mt-1 text-xs text-[#718078]">
@@ -163,12 +163,12 @@ export function QrScannerModal({
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-md">
                 <CheckCircle2 className="h-8 w-8 stroke-[2.5]" />
               </div>
-              <h3 className="text-lg font-extrabold text-[#14211D]">
+              <h3 className="text-lg font-bold text-foreground">
                 Turnstile Verified!
               </h3>
-              <p className="text-xs text-[#14211D] font-medium">
-                Entry recorded at <span className="font-bold">{successInfo.checkInTime}</span> via{" "}
-                <span className="font-bold">{successInfo.gate}</span>.
+              <p className="text-xs text-foreground font-medium">
+                Entry recorded at <span className="font-semibold">{successInfo.checkInTime}</span> via{" "}
+                <span className="font-semibold">{successInfo.gate}</span>.
               </p>
               <span className="text-[11px] text-primary font-semibold flex items-center gap-1">
                 <Sparkles className="h-3 w-3" /> Have a great workout!

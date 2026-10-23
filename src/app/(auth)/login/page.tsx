@@ -15,7 +15,7 @@ export default function LoginPage() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-primary shadow-xs">
             <Dumbbell className="h-6 w-6 stroke-[2.2]" />
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-[#14211D]">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Welcome to FitFlow
           </h1>
           <p className="text-xs text-[#718078]">
@@ -34,7 +34,7 @@ export default function LoginPage() {
                 <User className="h-5 w-5" />
               </div>
               <div className="text-left">
-                <span className="text-sm font-extrabold text-[#14211D] block">
+                <span className="text-sm font-semibold text-foreground block">
                   Member Portal
                 </span>
                 <span className="text-xs text-[#718078] block">
@@ -54,7 +54,7 @@ export default function LoginPage() {
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div className="text-left">
-                <span className="text-sm font-extrabold text-[#14211D] block">
+                <span className="text-sm font-semibold text-foreground block">
                   Admin Dashboard
                 </span>
                 <span className="text-xs text-[#718078] block">

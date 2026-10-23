@@ -23,10 +23,10 @@ export function FloorDensityCard({ data, className }: FloorDensityCardProps) {
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-extrabold text-foreground tracking-tight">
+            <h4 className="text-sm font-semibold text-foreground tracking-tight">
               Floor Density
             </h4>
-            <span className="rounded-full bg-primary/20 border border-primary/30 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-primary">
+            <span className="rounded-full bg-primary/20 border border-primary/30 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
               {data.status}
             </span>
           </div>

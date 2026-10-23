@@ -84,7 +84,7 @@ export function ProgressView({
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to Dashboard</span>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#14211D]">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
             Body Metrics & Progress
           </h1>
           <p className="text-sm text-[#718078] font-medium mt-0.5">
@@ -95,7 +95,7 @@ export function ProgressView({
         <button
           type="button"
           onClick={() => setIsLogging(true)}
-          className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-xs font-bold text-white hover:bg-primary-hover active:scale-[0.98] transition-all cursor-pointer shadow-xs self-start sm:self-auto"
+          className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-xs font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all cursor-pointer shadow-xs self-start sm:self-auto"
         >
           <Plus className="h-4 w-4 stroke-[2.5]" />
           <span>Log Measurement</span>
@@ -105,30 +105,30 @@ export function ProgressView({
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="rounded-3xl border border-border bg-card p-5 shadow-xs">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078] block mb-1">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078] block mb-1">
             Current Weight
           </span>
-          <span className="text-3xl font-extrabold text-[#14211D]">
-            {latestWeight.toFixed(1)} <span className="text-sm font-semibold text-[#718078]">kg</span>
+          <span className="text-3xl font-bold text-foreground">
+            {latestWeight.toFixed(1)} <span className="text-sm font-medium text-[#718078]">kg</span>
           </span>
         </div>
 
         <div className="rounded-3xl border border-border bg-card p-5 shadow-xs">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078] block mb-1">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078] block mb-1">
             Starting Weight
           </span>
-          <span className="text-3xl font-extrabold text-[#14211D]">
-            {startingWeight.toFixed(1)} <span className="text-sm font-semibold text-[#718078]">kg</span>
+          <span className="text-3xl font-bold text-foreground">
+            {startingWeight.toFixed(1)} <span className="text-sm font-medium text-[#718078]">kg</span>
           </span>
         </div>
 
         <div className="rounded-3xl border border-border bg-card p-5 shadow-xs">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078] block mb-1">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078] block mb-1">
             Total Net Change
           </span>
-          <span className="text-3xl font-extrabold text-[#14211D] inline-flex items-center gap-2">
+          <span className="text-3xl font-bold text-foreground inline-flex items-center gap-2">
             {change > 0 ? `+${change.toFixed(1)}` : `${change.toFixed(1)}`}
-            <span className="text-xs font-bold rounded-md bg-accent px-2 py-0.5 text-success">
+            <span className="text-xs font-semibold rounded-md bg-accent px-2 py-0.5 text-success">
               kg
             </span>
           </span>
@@ -138,7 +138,7 @@ export function ProgressView({
       {/* Log Form Dialog */}
       {isLogging && (
         <div className="rounded-3xl border border-primary/30 bg-card p-6 shadow-md animate-in slide-in-from-top-3 duration-200">
-          <h3 className="text-base font-extrabold text-[#14211D] mb-1">
+          <h3 className="text-base font-semibold text-foreground mb-1">
             Record New Measurement
           </h3>
           <p className="text-xs text-[#718078] mb-4">

@@ -80,18 +80,18 @@ export function LogWeightModal({
           <X className="h-4 w-4" />
         </button>
 
-        <div className="flex items-center gap-2 text-xs font-bold text-primary mb-1">
+        <div className="flex items-center gap-2 text-xs font-semibold text-primary mb-1">
           <Scale className="h-4 w-4" />
           <span>Body Metrics</span>
         </div>
-        <h3 className="text-lg font-extrabold text-[#14211D]">Log Body Weight</h3>
+        <h3 className="text-lg font-bold text-foreground">Log Body Weight</h3>
         <p className="text-xs text-[#718078] mt-0.5">
           Record today&apos;s measurement in kg to track your progress trend.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#14211D] mb-1.5">
+            <label className="block text-xs font-semibold text-foreground mb-1.5">
               Weight (kg)
             </label>
             <div className="relative">

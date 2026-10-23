@@ -27,7 +27,7 @@ export function AttendancePageHeader({
         </div>
 
         {/* Main Heading */}
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#14211D]">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
           My Attendance
         </h1>
 
@@ -44,7 +44,7 @@ export function AttendancePageHeader({
           type="button"
           onClick={onExportCsv}
           disabled={isExporting}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-bold text-[#14211D] shadow-xs hover:bg-[#F5F8F6] hover:border-[#BAC8BF] active:scale-[0.98] transition-all cursor-pointer disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground shadow-xs hover:bg-[#F5F8F6] hover:border-[#BAC8BF] active:scale-[0.98] transition-all cursor-pointer disabled:opacity-60"
           title="Download attendance records as CSV"
         >
           <Download className="h-3.5 w-3.5 text-[#718078]" />
@@ -55,7 +55,7 @@ export function AttendancePageHeader({
         <button
           type="button"
           onClick={onScanQr}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-hover active:scale-[0.98] transition-all cursor-pointer"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-primary-hover active:scale-[0.98] transition-all cursor-pointer"
           title="Scan Turnstile QR"
         >
           <QrCode className="h-3.5 w-3.5 stroke-[2.2]" />

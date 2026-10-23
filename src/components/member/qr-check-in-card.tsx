@@ -53,7 +53,7 @@ export function QrCheckInCard({
             </div>
 
             {/* Main Heading */}
-            <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#14211D]">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
               Scan Turnstile QR Code
             </h2>
 
@@ -65,10 +65,10 @@ export function QrCheckInCard({
             {/* Attendance Status Strip */}
             <div className="pt-1 flex items-center gap-2 text-xs font-medium">
               {attendance.checkedInToday ? (
-                <div className="inline-flex items-center gap-2 rounded-xl bg-accent/70 border border-success/20 px-3 py-1.5 text-[#14211D] animate-in fade-in duration-200">
+                <div className="inline-flex items-center gap-2 rounded-xl bg-accent/70 border border-success/20 px-3 py-1.5 text-foreground animate-in fade-in duration-200">
                   <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
                   <span>
-                    Checked in at <span className="font-bold">{attendance.todayCheckInTime}</span>
+                    Checked in at <span className="font-semibold">{attendance.todayCheckInTime}</span>
                     {attendance.todayGate && (
                       <>
                         <span className="mx-1.5 text-muted-foreground">•</span>
@@ -91,10 +91,10 @@ export function QrCheckInCard({
             <button
               type="button"
               onClick={() => setIsScannerOpen(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-primary px-6 py-4 text-sm font-bold tracking-wide text-white hover:bg-primary-hover active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow-md"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-primary px-6 py-4 text-sm font-semibold tracking-wide text-white hover:bg-primary-hover active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow-md"
             >
               <QrCode className="h-5 w-5 stroke-[2.2]" />
-              <span className="font-extrabold">SCAN GYM QR</span>
+              <span className="font-bold">SCAN GYM QR</span>
               <ArrowRight className="h-4 w-4 stroke-[2.5]" />
             </button>
           </div>

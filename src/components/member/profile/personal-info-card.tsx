@@ -19,7 +19,7 @@ export function PersonalInfoCard({ member, onEditClick }: PersonalInfoCardProps)
             <User className="h-4 w-4 stroke-[2.2]" />
           </div>
           <div>
-            <h3 className="text-base font-extrabold text-[#14211D]">
+            <h3 className="text-base font-semibold text-foreground">
               Personal Information
             </h3>
             <p className="text-xs text-[#718078] font-medium">
@@ -33,7 +33,7 @@ export function PersonalInfoCard({ member, onEditClick }: PersonalInfoCardProps)
           id="personal-info-edit-btn"
           type="button"
           onClick={onEditClick}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-bold text-[#14211D] shadow-2xs hover:bg-[#F5F8F6] hover:border-[#BAC8BF] transition-all cursor-pointer"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground shadow-2xs hover:bg-[#F5F8F6] hover:border-[#BAC8BF] transition-all cursor-pointer"
         >
           <Edit3 className="h-3.5 w-3.5 text-[#718078]" />
           <span>Edit</span>
@@ -47,7 +47,7 @@ export function PersonalInfoCard({ member, onEditClick }: PersonalInfoCardProps)
           <span className="text-[11px] font-semibold text-[#718078] flex items-center gap-1.5">
             <User className="h-3 w-3 text-[#718078]" /> Full Name
           </span>
-          <p className="font-extrabold text-sm text-[#14211D]">
+          <p className="font-semibold text-sm text-foreground">
             {member.name}
           </p>
         </div>
@@ -57,7 +57,7 @@ export function PersonalInfoCard({ member, onEditClick }: PersonalInfoCardProps)
           <span className="text-[11px] font-semibold text-[#718078] flex items-center gap-1.5">
             <Hash className="h-3 w-3 text-[#718078]" /> Member ID
           </span>
-          <p className="font-mono font-bold text-sm text-primary">
+          <p className="font-mono font-semibold text-sm text-primary">
             {member.memberCode}
           </p>
         </div>
@@ -67,7 +67,7 @@ export function PersonalInfoCard({ member, onEditClick }: PersonalInfoCardProps)
           <span className="text-[11px] font-semibold text-[#718078] flex items-center gap-1.5">
             <Phone className="h-3 w-3 text-[#718078]" /> Phone Number
           </span>
-          <p className="font-bold text-sm text-[#14211D]">
+          <p className="font-medium text-sm text-foreground">
             {member.phone || "Not provided"}
           </p>
         </div>
@@ -77,18 +77,18 @@ export function PersonalInfoCard({ member, onEditClick }: PersonalInfoCardProps)
           <span className="text-[11px] font-semibold text-[#718078] flex items-center gap-1.5">
             <Mail className="h-3 w-3 text-[#718078]" /> Email Address
           </span>
-          <p className="font-bold text-sm text-[#14211D] truncate">
+          <p className="font-medium text-sm text-foreground truncate">
             {member.email || "Not provided"}
           </p>
         </div>
       </div>
 
       {/* Verification Strip */}
-      <div className="flex items-center justify-between rounded-2xl bg-accent/40 border border-primary/20 px-4 py-2.5 text-xs text-[#14211D]">
+      <div className="flex items-center justify-between rounded-2xl bg-accent/40 border border-primary/20 px-4 py-2.5 text-xs text-foreground">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-4 w-4 text-primary" />
           <span className="font-medium text-[#718078]">Account Verification:</span>
-          <span className="font-bold text-primary">Verified Active</span>
+          <span className="font-semibold text-primary">Verified Active</span>
         </div>
         <span className="text-[11px] text-[#718078] font-medium hidden xs:inline">
           Turnstile Gate Enabled

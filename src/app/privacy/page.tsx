@@ -18,7 +18,7 @@ export default function PrivacyPage() {
         </Link>
         <div className="flex items-center gap-2 text-primary">
           <Lock className="h-6 w-6" />
-          <h1 className="text-2xl font-extrabold text-[#14211D]">Privacy Policy</h1>
+          <h1 className="text-2xl font-bold text-foreground">Privacy Policy</h1>
         </div>
         <p className="text-xs text-[#718078] leading-relaxed">
           Your personal details, attendance records, and body metrics are strictly private to your member account.

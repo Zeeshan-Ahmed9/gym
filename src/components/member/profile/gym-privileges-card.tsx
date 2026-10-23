@@ -45,7 +45,7 @@ export function GymPrivilegesCard({
           <Sparkles className="h-4 w-4 stroke-[2.2]" />
         </div>
         <div>
-          <h3 className="text-base font-extrabold text-[#14211D]">
+          <h3 className="text-base font-semibold text-foreground">
             Membership Privileges
           </h3>
           <p className="text-xs text-[#718078] font-medium">
@@ -67,7 +67,7 @@ export function GymPrivilegesCard({
                 <Icon className="h-4 w-4 stroke-[2.2]" />
               </div>
               <div className="space-y-0.5">
-                <h4 className="font-bold text-[#14211D]">
+                <h4 className="font-semibold text-foreground">
                   {item.title}
                 </h4>
                 <p className="text-[11px] text-[#718078] leading-tight">
@@ -84,10 +84,10 @@ export function GymPrivilegesCard({
         <div className="flex items-center gap-2">
           <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
           <span className="font-medium">
-            <strong className="text-[#14211D]">{gymName}</strong> • {gymAddress}
+            <strong className="text-foreground">{gymName}</strong> • {gymAddress}
           </span>
         </div>
-        <div className="flex items-center gap-1.5 text-primary font-bold self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 text-primary font-semibold self-start sm:self-auto">
           <PhoneCall className="h-3.5 w-3.5" />
           <span>{gymPhone}</span>
         </div>

@@ -18,7 +18,7 @@ export default function TermsPage() {
         </Link>
         <div className="flex items-center gap-2 text-primary">
           <ShieldCheck className="h-6 w-6" />
-          <h1 className="text-2xl font-extrabold text-[#14211D]">Terms of Service</h1>
+          <h1 className="text-2xl font-bold text-foreground">Terms of Service</h1>
         </div>
         <p className="text-xs text-[#718078] leading-relaxed">
           Welcome to FitFlow Gym Management. By accessing your member account and using facility amenities,

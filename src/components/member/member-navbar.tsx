@@ -36,7 +36,7 @@ export function MemberNavbar({ member, membership }: MemberNavbarProps) {
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-primary shadow-xs">
             <Dumbbell className="h-5 w-5 stroke-[2.2]" />
           </div>
-          <span className="font-extrabold text-lg tracking-tight text-foreground">
+          <span className="font-bold text-lg tracking-tight text-foreground">
             FitFlow
           </span>
         </Link>
@@ -55,7 +55,7 @@ export function MemberNavbar({ member, membership }: MemberNavbarProps) {
                 href={link.href}
                 className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all border ${
                   isActive
-                    ? "bg-accent text-primary border-primary/25 shadow-xs font-bold"
+                    ? "bg-accent text-primary border-primary/25 shadow-xs font-semibold"
                     : "border-transparent text-[#718078] hover:text-foreground hover:bg-card/50"
                 }`}
               >
@@ -71,7 +71,7 @@ export function MemberNavbar({ member, membership }: MemberNavbarProps) {
           <button
             type="button"
             onClick={() => setIsScannerOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary-hover active:scale-[0.98] transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-primary-hover active:scale-[0.98] transition-all cursor-pointer"
             title="Scan Turnstile QR"
           >
             <QrCode className="h-3.5 w-3.5" />
@@ -84,13 +84,13 @@ export function MemberNavbar({ member, membership }: MemberNavbarProps) {
             className="flex items-center gap-2 rounded-full border border-border bg-card pl-1.5 pr-2.5 py-1 shadow-xs hover:border-[#BAC8BF] transition-all cursor-pointer group"
           >
             {/* Initials Avatar */}
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-primary text-[11px] font-extrabold border border-primary/20 shadow-xs">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-primary text-[11px] font-semibold border border-primary/20 shadow-xs">
               {member.initials}
             </div>
 
             {/* Name & Code */}
             <div className="text-left leading-tight hidden xs:block">
-              <span className="text-xs font-bold text-foreground block group-hover:text-primary transition-colors">
+              <span className="text-xs font-semibold text-foreground block group-hover:text-primary transition-colors">
                 {member.name}
               </span>
               <span className="text-[10px] font-mono text-[#718078] block">
@@ -100,7 +100,7 @@ export function MemberNavbar({ member, membership }: MemberNavbarProps) {
 
             {/* Status Badge */}
             <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
                 membership.status === "ACTIVE"
                   ? "bg-accent text-success border border-success/20"
                   : "bg-[#FDF2F2] text-danger border border-danger/20"

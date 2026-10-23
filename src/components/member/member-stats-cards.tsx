@@ -91,7 +91,7 @@ export function MemberStatsCards({
         {/* CARD 1: VISITS THIS MONTH */}
         <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#BAC8BF] transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
               Visits This Month
             </span>
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F5F8F6] text-[#718078]">
@@ -101,7 +101,7 @@ export function MemberStatsCards({
 
           <div className="space-y-1">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-extrabold tracking-tight text-[#14211D]">
+              <span className="text-3xl font-bold tracking-tight text-foreground">
                 {attendance.visitsThisMonth}
               </span>
               <span className="text-xs font-semibold text-[#718078]">
@@ -109,7 +109,7 @@ export function MemberStatsCards({
               </span>
             </div>
 
-            <p className="text-xs font-bold text-success">
+            <p className="text-xs font-semibold text-success">
               {attendance.goalPercentage}% of monthly goal reached
             </p>
           </div>
@@ -126,7 +126,7 @@ export function MemberStatsCards({
         {/* CARD 2: CURRENT STREAK */}
         <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#BAC8BF] transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
               Current Streak
             </span>
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FEF3C7] text-warning">
@@ -135,10 +135,10 @@ export function MemberStatsCards({
           </div>
 
           <div className="space-y-0.5">
-            <div className="text-3xl font-extrabold tracking-tight text-[#14211D]">
+            <div className="text-3xl font-bold tracking-tight text-foreground">
               {attendance.currentStreak} Days
             </div>
-            <p className="text-xs font-bold text-success">
+            <p className="text-xs font-semibold text-success">
               {attendance.streakMessage}
             </p>
           </div>
@@ -148,11 +148,11 @@ export function MemberStatsCards({
             {attendance.weekDays.map((day, idx) => (
               <div
                 key={idx}
-                className={`flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-bold transition-all ${
+                className={`flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-semibold transition-all ${
                   day.attended
                     ? "bg-primary text-white shadow-xs"
                     : "bg-[#F0F4F2] text-[#718078]"
-                } ${day.isToday ? "ring-2 ring-primary/40 font-extrabold" : ""}`}
+                } ${day.isToday ? "ring-2 ring-primary/40 font-bold" : ""}`}
                 title={`${day.dayName}: ${day.attended ? "Attended" : "No check-in"}`}
               >
                 {day.dayLetter}
@@ -164,11 +164,11 @@ export function MemberStatsCards({
         {/* CARD 3: MEMBERSHIP */}
         <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#BAC8BF] transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
               Membership
             </span>
             <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
+              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${
                 membership.feeStatus === "PAID"
                   ? "bg-accent text-success border border-success/20"
                   : "bg-[#FEF7EC] text-warning border border-warning/20"
@@ -179,11 +179,11 @@ export function MemberStatsCards({
           </div>
 
           <div className="space-y-0.5">
-            <div className="text-xs font-semibold text-[#718078]">
+            <div className="text-xs font-medium text-[#718078]">
               {membership.planName}
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#14211D]">
+              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
                 Rs. {membership.monthlyFee.toLocaleString()}
               </span>
               <span className="text-xs font-medium text-[#718078]">
@@ -195,7 +195,7 @@ export function MemberStatsCards({
           {/* Dues & Renewal Info */}
           <div className="flex items-center justify-between text-xs text-[#718078] pt-1 border-t border-border/50">
             <span>
-              Dues: <strong className="text-[#14211D]">Rs. {membership.duesAmount}</strong>
+              Dues: <strong className="text-foreground font-semibold">Rs. {membership.duesAmount}</strong>
             </span>
             <span>{membership.renewsFormatted}</span>
           </div>
@@ -204,13 +204,13 @@ export function MemberStatsCards({
         {/* CARD 4: BODY METRICS */}
         <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-3 hover:border-[#BAC8BF] transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#718078]">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
               Body Metrics
             </span>
             <button
               type="button"
               onClick={() => setIsLogModalOpen(true)}
-              className="text-xs font-bold text-primary hover:underline cursor-pointer"
+              className="text-xs font-semibold text-primary hover:underline cursor-pointer"
             >
               Log →
             </button>
@@ -218,13 +218,13 @@ export function MemberStatsCards({
 
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-3xl font-extrabold tracking-tight text-[#14211D]">
+              <span className="text-3xl font-bold tracking-tight text-foreground">
                 {metrics.currentWeight ? `${metrics.currentWeight.toFixed(1)}` : "72.0"}
-                <span className="text-xs font-semibold text-[#718078] ml-1">kg</span>
+                <span className="text-xs font-medium text-[#718078] ml-1">kg</span>
               </span>
 
               {/* Weight change badge */}
-              <span className="rounded-md bg-accent px-2 py-0.5 text-xs font-extrabold text-success inline-flex items-center gap-0.5">
+              <span className="rounded-md bg-accent px-2 py-0.5 text-xs font-semibold text-success inline-flex items-center gap-0.5">
                 {metrics.weightChangeFormatted || "−4.0 kg"}
               </span>
             </div>

@@ -109,7 +109,7 @@ export function AttendanceQrKioskModal({
             <Building2 className="h-3.5 w-3.5" />
             <span>{gymName}</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#14211D]">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
             Gym Attendance QR
           </h2>
           <p className="mt-1 text-xs text-muted-foreground font-medium">
@@ -134,7 +134,7 @@ export function AttendanceQrKioskModal({
             )}
 
             {/* Turnstile Gate Tag */}
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-accent/60 px-3 py-1 text-[11px] font-extrabold text-primary border border-primary/20">
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-accent/60 px-3 py-1 text-[11px] font-semibold text-primary border border-primary/20">
               <QrCode className="h-3 w-3" />
               <span>Turnstile Gate 01 • Live Check-In</span>
             </div>
@@ -142,7 +142,7 @@ export function AttendanceQrKioskModal({
 
           <div className="mt-3.5 flex items-center gap-2 text-xs text-muted-foreground font-medium">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span>Encodes: <code className="font-mono text-foreground font-bold">{gateCode}</code></span>
+            <span>Encodes: <code className="font-mono text-foreground font-semibold">{gateCode}</code></span>
             <button
               type="button"
               onClick={handleCopyCode}

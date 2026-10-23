@@ -168,7 +168,7 @@ export function MemberLoginPortal() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-primary shadow-xs">
             <Dumbbell className="h-6 w-6 stroke-[2.2]" />
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-[#14211D]">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             FitFlow Member Portal
           </h1>
           <p className="text-xs text-[#718078] font-medium">
@@ -197,7 +197,7 @@ export function MemberLoginPortal() {
             <div className="space-y-1.5">
               <label
                 htmlFor="member-gym-id-input"
-                className="block text-xs font-bold text-[#14211D]"
+                className="block text-xs font-semibold text-foreground"
               >
                 Gym ID (Member Code)
               </label>
@@ -212,7 +212,7 @@ export function MemberLoginPortal() {
                   }}
                   placeholder="e.g. GYM-54110"
                   disabled={isVerifying}
-                  className="w-full uppercase font-mono tracking-wider rounded-2xl border border-border bg-[#F9FBFA] px-4 py-3 text-sm font-bold text-[#14211D] focus:border-primary focus:bg-card focus:outline-hidden transition-all shadow-2xs"
+                  className="w-full uppercase font-mono tracking-wider rounded-2xl border border-border bg-[#F9FBFA] px-4 py-3 text-sm font-semibold text-foreground focus:border-primary focus:bg-card focus:outline-hidden transition-all shadow-2xs"
                   required
                   autoFocus
                 />
@@ -226,7 +226,7 @@ export function MemberLoginPortal() {
               id="verify-gym-id-submit-btn"
               type="submit"
               disabled={isVerifying}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3.5 text-xs font-extrabold text-white hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3.5 text-xs font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
             >
               {isVerifying ? (
                 <>
@@ -247,14 +247,14 @@ export function MemberLoginPortal() {
             {/* Verified Member Badge */}
             <div className="rounded-2xl bg-accent/60 border border-primary/25 p-3.5 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-white text-xs font-bold">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-white text-xs font-semibold">
                   <UserCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-extrabold text-[#14211D]">
+                  <h3 className="text-xs font-bold text-foreground">
                     {verifiedMember.name}
                   </h3>
-                  <span className="font-mono text-[10px] text-primary font-bold">
+                  <span className="font-mono text-[10px] text-primary font-semibold">
                     {verifiedMember.memberCode}
                   </span>
                 </div>
@@ -279,7 +279,7 @@ export function MemberLoginPortal() {
             <div className="space-y-1.5">
               <label
                 htmlFor="member-login-password"
-                className="block text-xs font-bold text-[#14211D]"
+                className="block text-xs font-semibold text-foreground"
               >
                 Password
               </label>
@@ -291,7 +291,7 @@ export function MemberLoginPortal() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your account password"
                   disabled={isSubmitting}
-                  className="w-full rounded-2xl border border-border bg-[#F9FBFA] pl-4 pr-11 py-3 text-xs font-semibold text-[#14211D] focus:border-primary focus:bg-card focus:outline-hidden transition-all shadow-2xs"
+                  className="w-full rounded-2xl border border-border bg-[#F9FBFA] pl-4 pr-11 py-3 text-xs font-medium text-foreground focus:border-primary focus:bg-card focus:outline-hidden transition-all shadow-2xs"
                   required
                   autoFocus
                 />
@@ -310,7 +310,7 @@ export function MemberLoginPortal() {
               id="member-signin-btn"
               type="submit"
               disabled={isSubmitting}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3.5 text-xs font-extrabold text-white hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3.5 text-xs font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
             >
               {isSubmitting ? (
                 <>
@@ -331,7 +331,7 @@ export function MemberLoginPortal() {
             {/* First-time Activation Banner */}
             <div className="rounded-2xl bg-accent border border-primary/30 p-3.5 space-y-1">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-primary">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary">
                   <ShieldCheck className="h-4 w-4" />
                   First-Time Account Setup
                 </span>
@@ -359,7 +359,7 @@ export function MemberLoginPortal() {
             <div className="space-y-1.5">
               <label
                 htmlFor="setup-password-input"
-                className="block text-xs font-bold text-[#14211D]"
+                className="block text-xs font-semibold text-foreground"
               >
                 Create Password (min. 6 characters)
               </label>
@@ -371,7 +371,7 @@ export function MemberLoginPortal() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Choose a strong password"
                   disabled={isSubmitting}
-                  className="w-full rounded-2xl border border-border bg-[#F9FBFA] pl-4 pr-11 py-3 text-xs font-semibold text-[#14211D] focus:border-primary focus:bg-card focus:outline-hidden transition-all shadow-2xs"
+                  className="w-full rounded-2xl border border-border bg-[#F9FBFA] pl-4 pr-11 py-3 text-xs font-medium text-foreground focus:border-primary focus:bg-card focus:outline-hidden transition-all shadow-2xs"
                   required
                   autoFocus
                 />
@@ -390,7 +390,7 @@ export function MemberLoginPortal() {
             <div className="space-y-1.5">
               <label
                 htmlFor="setup-confirm-password-input"
-                className="block text-xs font-bold text-[#14211D]"
+                className="block text-xs font-semibold text-foreground"
               >
                 Confirm Password
               </label>
@@ -401,7 +401,7 @@ export function MemberLoginPortal() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter your password"
                 disabled={isSubmitting}
-                className="w-full rounded-2xl border border-border bg-[#F9FBFA] px-4 py-3 text-xs font-semibold text-[#14211D] focus:border-primary focus:bg-card focus:outline-hidden transition-all shadow-2xs"
+                className="w-full rounded-2xl border border-border bg-[#F9FBFA] px-4 py-3 text-xs font-medium text-foreground focus:border-primary focus:bg-card focus:outline-hidden transition-all shadow-2xs"
                 required
               />
             </div>
@@ -410,7 +410,7 @@ export function MemberLoginPortal() {
               id="member-setup-submit-btn"
               type="submit"
               disabled={isSubmitting}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3.5 text-xs font-extrabold text-white hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3.5 text-xs font-semibold text-white hover:bg-primary-hover active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
             >
               {isSubmitting ? (
                 <>

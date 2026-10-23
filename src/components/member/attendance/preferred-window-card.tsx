@@ -31,7 +31,7 @@ export function PreferredWindowCard({
     <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#BAC8BF] transition-all">
       {/* Header Row */}
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#14211D]">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[#718078]">
           PREFERRED CHECK-IN WINDOW
         </span>
         <Clock className="h-4 w-4 text-[#718078]" />
@@ -41,7 +41,7 @@ export function PreferredWindowCard({
       {hasData ? (
         <p className="text-xs text-[#718078] font-medium leading-relaxed">
           Peak attendance typically falls between{" "}
-          <strong className="text-[#14211D] font-bold">{peakTimeLabel}</strong>.
+          <strong className="text-foreground font-semibold">{peakTimeLabel}</strong>.
         </p>
       ) : (
         <p className="text-xs text-[#718078] font-medium">
@@ -70,9 +70,9 @@ export function PreferredWindowCard({
         </div>
 
         {/* Labels below chart */}
-        <div className="flex items-center justify-between text-[11px] text-[#718078] font-semibold pt-3 px-1 border-t border-border/40 mt-1">
+        <div className="flex items-center justify-between text-[11px] text-[#718078] font-medium pt-3 px-1 border-t border-border/40 mt-1">
           <span>Morning</span>
-          <span className="font-bold text-[#14211D]">Evening Peak</span>
+          <span className="font-semibold text-foreground">Evening Peak</span>
           <span>Night</span>
         </div>
       </div>
