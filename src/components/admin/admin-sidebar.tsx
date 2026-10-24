@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutGrid,
   Users,
@@ -11,8 +11,12 @@ import {
   Settings,
   Dumbbell,
   X,
+  KeyRound,
+  Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AdminPasscodeModal } from "@/components/admin/auth/admin-passcode-modal";
+import { lockAdminSessionAction } from "@/server/actions/admin-passcode.actions";
 
 interface AdminSidebarProps {
   isOpen?: boolean;
@@ -25,7 +29,21 @@ export function AdminSidebar({
   onClose,
   className,
 }: AdminSidebarProps) {
+  const router = useRouter();
   const pathname = usePathname();
+  const [changePassModalOpen, setChangePassModalOpen] = React.useState(false);
+  const [locking, setLocking] = React.useState(false);
+
+  const handleLock = async () => {
+    setLocking(true);
+    try {
+      await lockAdminSessionAction();
+      router.push("/");
+      router.refresh();
+    } finally {
+      setLocking(false);
+    }
+  };
 
   const navItems = [
     {
@@ -125,9 +143,33 @@ export function AdminSidebar({
         </nav>
       </div>
 
-      {/* Bottom: Subtle Gym Info / Version */}
-      <div className="pt-4 border-t border-border">
-        <div className="px-2 py-1.5 text-xs text-muted-foreground">
+      {/* Bottom: Passcode Security & Front Desk Info */}
+      <div className="pt-4 border-t border-border space-y-2">
+        {/* Passcode Security Actions */}
+        <div className="space-y-1">
+          <button
+            type="button"
+            onClick={() => setChangePassModalOpen(true)}
+            className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-[#F5F8F6] hover:text-foreground transition-colors cursor-pointer"
+            title="Change Admin Passcode (requires previous passcode)"
+          >
+            <KeyRound className="h-3.5 w-3.5 text-primary" />
+            <span>Change Passcode</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleLock}
+            disabled={locking}
+            className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-red-600/80 hover:bg-red-50 hover:text-red-700 transition-colors cursor-pointer disabled:opacity-50"
+            title="Lock Admin Session"
+          >
+            <Lock className="h-3.5 w-3.5" />
+            <span>{locking ? "Locking..." : "Lock Admin Panel"}</span>
+          </button>
+        </div>
+
+        <div className="px-2 py-1.5 text-xs text-muted-foreground border-t border-border/60">
           <p className="font-semibold text-foreground">Front Desk Portal</p>
           <p className="text-[11px] text-muted-foreground/80 mt-0.5">Management & Operations</p>
         </div>
@@ -159,6 +201,14 @@ export function AdminSidebar({
           </div>
         </div>
       )}
+
+      {/* Change Passcode Modal */}
+      <AdminPasscodeModal
+        isOpen={changePassModalOpen}
+        initialMode="change"
+        onClose={() => setChangePassModalOpen(false)}
+        onSuccessRedirect="/admin"
+      />
     </>
   );
 }

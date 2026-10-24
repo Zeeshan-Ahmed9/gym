@@ -11,10 +11,10 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Gym Management System",
-    template: "%s | Gym Management",
+    default: "IronMan Fitness",
+    template: "%s | IronMan Fitness",
   },
-  description: "Modern, high-performance web platform for gym owners and members.",
+  description: "Elite Strength & Conditioning Facility. Built for champions.",
   icons: {
     icon: "/favicon.ico",
   },

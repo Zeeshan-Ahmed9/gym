@@ -140,6 +140,7 @@ model GymSetting {
   address                        String   @default("Plot 42, Commercial Avenue, Phase 5")
   defaultMonthlyFee              Decimal  @default(3000) @db.Decimal(10, 2)
   defaultMembershipDurationMonths Int     @default(1)
+  adminPasscodeHash              String?
   updatedAt                      DateTime @updatedAt
 
   @@map("gym_settings")
