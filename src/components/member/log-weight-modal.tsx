@@ -25,12 +25,14 @@ export function LogWeightModal({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  React.useEffect(() => {
-    if (isOpen && currentWeight) {
+  const [prevWeight, setPrevWeight] = React.useState(currentWeight);
+  if (currentWeight !== prevWeight) {
+    setPrevWeight(currentWeight);
+    if (currentWeight) {
       setWeight(currentWeight.toString());
       setError(null);
     }
-  }, [isOpen, currentWeight]);
+  }
 
   if (!isOpen) return null;
 

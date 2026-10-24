@@ -6,7 +6,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  Sparkles,
   DoorOpen,
 } from "lucide-react";
 import type { AttendanceStats } from "@/types/member-dashboard";

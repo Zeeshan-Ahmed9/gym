@@ -16,7 +16,6 @@ export function PreferredWindowCard({
   distribution,
 }: PreferredWindowCardProps) {
   // Mini chart bar heights (7 bars representing timeline from morning to night)
-  // Matching screenshot visual appearance
   const defaultBars = [
     { height: 18, isPeak: false, color: "bg-[#E3EAE5]" },
     { height: 26, isPeak: false, color: "bg-[#E3EAE5]" },
@@ -26,6 +25,21 @@ export function PreferredWindowCard({
     { height: 46, isPeak: false, color: "bg-[#A7E4CD]" },
     { height: 20, isPeak: false, color: "bg-[#E3EAE5]" },
   ];
+
+  const bars = React.useMemo(() => {
+    if (distribution && distribution.length > 0) {
+      const maxCount = Math.max(...distribution.map((d) => d.count), 1);
+      return distribution.map((d) => {
+        const height = Math.max(16, Math.round((d.count / maxCount) * 85));
+        return {
+          height,
+          isPeak: d.isPeak,
+          color: d.isPeak ? "bg-primary" : height > 40 ? "bg-[#A7E4CD]" : "bg-[#E3EAE5]",
+        };
+      });
+    }
+    return defaultBars;
+  }, [distribution]);
 
   return (
     <div className="rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#BAC8BF] transition-all">
@@ -53,7 +67,7 @@ export function PreferredWindowCard({
       <div className="rounded-2xl bg-[#F9FBFA] border border-border/60 p-4 pt-6">
         {/* Bars Container */}
         <div className="flex items-end justify-between gap-2 h-16 px-2">
-          {defaultBars.map((bar, idx) => (
+          {bars.map((bar, idx) => (
             <div
               key={idx}
               className="flex-1 flex flex-col items-center justify-end h-full"

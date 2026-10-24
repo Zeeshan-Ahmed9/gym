@@ -1,22 +1,17 @@
-"use client";
-
-import * as React from "react";
 import {
   Calendar as CalendarIcon,
   Clock,
   QrCode,
   UserCheck,
   ChevronDown,
-  ArrowRight,
-  ShieldCheck,
-  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import type { AttendanceHistoryItem } from "@/types/member-attendance";
 
 interface AttendanceHistoryCardProps {
   records: AttendanceHistoryItem[];
   totalInMonth: number;
-  totalAllTime: number;
+  totalAllTime?: number;
   sort: "newest" | "oldest";
   onSortChange: (sort: "newest" | "oldest") => void;
   onScanQr: () => void;
@@ -46,11 +41,12 @@ export function AttendanceHistoryCard({
       {/* 1. Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/80 pb-4">
         <div>
-          <h2 className="text-base sm:text-lg font-semibold text-foreground">
-            Attendance History Records
+          <h2 className="text-base sm:text-lg font-semibold text-foreground flex items-center gap-2">
+            <span>Attendance History Records</span>
+            {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />}
           </h2>
           <p className="text-xs text-[#718078] font-medium mt-0.5">
-            Turnstile and front desk validated check-ins
+            Turnstile and front desk validated check-ins {totalAllTime ? `(${totalAllTime} all-time)` : ""}
           </p>
         </div>
 

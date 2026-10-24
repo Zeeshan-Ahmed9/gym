@@ -24,9 +24,11 @@ export function MemberAttendanceView({ initialData }: MemberAttendanceViewProps)
   const [isExporting, setIsExporting] = React.useState(false);
 
   // Sync with initialData changes on revalidation
-  React.useEffect(() => {
+  const [prevInitialData, setPrevInitialData] = React.useState(initialData);
+  if (prevInitialData !== initialData) {
+    setPrevInitialData(initialData);
     setData(initialData);
-  }, [initialData]);
+  }
 
   // Navigate to another calendar month
   const handleNavigateMonth = async (targetMonth: string) => {
@@ -97,7 +99,7 @@ export function MemberAttendanceView({ initialData }: MemberAttendanceViewProps)
   };
 
   // QR Scan Success Handler
-  const handleScanSuccess = async (info: { checkInTime: string; gate: string }) => {
+  const handleScanSuccess = async () => {
     // Refresh data from server to update streak, summary, and history
     setIsLoading(true);
     try {

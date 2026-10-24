@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowLeft, Scale, Plus, Check, Loader2, Calendar } from "lucide-react";
+import { ArrowLeft, Scale, Plus, Check, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { logWeightAction } from "@/server/actions/member-dashboard.actions";
 

@@ -54,26 +54,21 @@ export function FeesView({
   const [selectedStatus, setSelectedStatus] = React.useState<StatusFilterOption>("All");
   const [selectedMonth, setSelectedMonth] = React.useState<string>("All Months");
 
-  // Modals
-  const [isRecordModalOpen, setIsRecordModalOpen] = React.useState(false);
-  const [prefilledRecord, setPrefilledRecord] = React.useState<FeeRecord | null>(null);
-  const hasOpenedInitialRecordRef = React.useRef(false);
-
-  // Auto-open record payment modal if initialRecordCode is provided on mount
-  React.useEffect(() => {
-    if (initialRecordCode && !hasOpenedInitialRecordRef.current) {
-      const match = records.find(
+  // Initial prefilled match if initialRecordCode is provided
+  const initialMatch = React.useMemo(() => {
+    if (!initialRecordCode) return null;
+    return (
+      records.find(
         (r) =>
           r.memberCode.toLowerCase() === initialRecordCode.toLowerCase() ||
           r.memberId === initialRecordCode
-      );
-      if (match) {
-        hasOpenedInitialRecordRef.current = true;
-        setPrefilledRecord(match);
-        setIsRecordModalOpen(true);
-      }
-    }
+      ) || null
+    );
   }, [initialRecordCode, records]);
+
+  // Modals
+  const [isRecordModalOpen, setIsRecordModalOpen] = React.useState(() => Boolean(initialMatch));
+  const [prefilledRecord, setPrefilledRecord] = React.useState<FeeRecord | null>(() => initialMatch);
 
   const [isViewModalOpen, setIsViewModalOpen] = React.useState(false);
   const [viewRecord, setViewRecord] = React.useState<FeeRecord | null>(null);

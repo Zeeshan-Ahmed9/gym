@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CreditCard, Calendar, CheckCircle2, AlertCircle, Clock, Zap } from "lucide-react";
+import { CreditCard, Calendar, CheckCircle2, AlertCircle, Clock } from "lucide-react";
 import type { MembershipDetails } from "@/types/member-dashboard";
 
 interface MembershipStatusCardProps {

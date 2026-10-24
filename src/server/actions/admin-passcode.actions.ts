@@ -24,11 +24,12 @@ export async function getAdminPasscodeStatus(): Promise<AdminPasscodeStatus> {
     const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
     const isUnlocked = token === "authorized";
 
-    const rows = await prisma.$queryRawUnsafe<{ adminPasscodeHash: string | null }[]>(
-      `SELECT "adminPasscodeHash" FROM gym_settings WHERE id = 'default' LIMIT 1;`
-    );
+    const setting = await prisma.gymSetting.findUnique({
+      where: { id: "default" },
+      select: { adminPasscodeHash: true },
+    });
 
-    const isConfigured = Boolean(rows && rows.length > 0 && rows[0]?.adminPasscodeHash);
+    const isConfigured = Boolean(setting?.adminPasscodeHash);
 
     return {
       isConfigured,
@@ -54,11 +55,12 @@ export async function createAdminPasscodeAction(
       return { success: false, error: "Passcode must be at least 4 characters long." };
     }
 
-    const rows = await prisma.$queryRawUnsafe<{ adminPasscodeHash: string | null }[]>(
-      `SELECT "adminPasscodeHash" FROM gym_settings WHERE id = 'default' LIMIT 1;`
-    );
+    const existing = await prisma.gymSetting.findUnique({
+      where: { id: "default" },
+      select: { adminPasscodeHash: true },
+    });
 
-    if (rows && rows.length > 0 && rows[0]?.adminPasscodeHash) {
+    if (existing?.adminPasscodeHash) {
       return {
         success: false,
         error: "An admin passcode is already configured. Use Change Passcode instead.",
@@ -67,14 +69,14 @@ export async function createAdminPasscodeAction(
 
     const hashed = await bcrypt.hash(passcode.trim(), 10);
 
-    await prisma.$executeRawUnsafe(
-      `INSERT INTO gym_settings (id, "adminPasscodeHash", "updatedAt")
-       VALUES ('default', $1, NOW())
-       ON CONFLICT (id) DO UPDATE SET
-         "adminPasscodeHash" = EXCLUDED."adminPasscodeHash",
-         "updatedAt" = NOW();`,
-      hashed
-    );
+    await prisma.gymSetting.upsert({
+      where: { id: "default" },
+      update: { adminPasscodeHash: hashed },
+      create: {
+        id: "default",
+        adminPasscodeHash: hashed,
+      },
+    });
 
     // Set authentication cookie
     const cookieStore = await cookies();
@@ -113,19 +115,19 @@ export async function verifyAdminPasscodeAction(
       return { success: false, error: "Please enter your admin passcode." };
     }
 
-    const rows = await prisma.$queryRawUnsafe<{ adminPasscodeHash: string | null }[]>(
-      `SELECT "adminPasscodeHash" FROM gym_settings WHERE id = 'default' LIMIT 1;`
-    );
+    const setting = await prisma.gymSetting.findUnique({
+      where: { id: "default" },
+      select: { adminPasscodeHash: true },
+    });
 
-    if (!rows || rows.length === 0 || !rows[0]?.adminPasscodeHash) {
+    if (!setting?.adminPasscodeHash) {
       return {
         success: false,
         error: "No admin passcode has been created yet. Please set up a passcode first.",
       };
     }
 
-    const hash = rows[0].adminPasscodeHash;
-    const isMatch = await bcrypt.compare(passcode.trim(), hash);
+    const isMatch = await bcrypt.compare(passcode.trim(), setting.adminPasscodeHash);
 
     if (!isMatch) {
       return { success: false, error: "Incorrect passcode. Please try again." };
@@ -180,19 +182,19 @@ export async function changeAdminPasscodeAction(
       };
     }
 
-    const rows = await prisma.$queryRawUnsafe<{ adminPasscodeHash: string | null }[]>(
-      `SELECT "adminPasscodeHash" FROM gym_settings WHERE id = 'default' LIMIT 1;`
-    );
+    const setting = await prisma.gymSetting.findUnique({
+      where: { id: "default" },
+      select: { adminPasscodeHash: true },
+    });
 
-    if (!rows || rows.length === 0 || !rows[0]?.adminPasscodeHash) {
+    if (!setting?.adminPasscodeHash) {
       return {
         success: false,
         error: "No existing passcode found to change. Please create one first.",
       };
     }
 
-    const currentHash = rows[0].adminPasscodeHash;
-    const isPreviousMatch = await bcrypt.compare(previousPasscode.trim(), currentHash);
+    const isPreviousMatch = await bcrypt.compare(previousPasscode.trim(), setting.adminPasscodeHash);
 
     if (!isPreviousMatch) {
       return {
@@ -204,10 +206,10 @@ export async function changeAdminPasscodeAction(
     // Hash the new passcode
     const newHash = await bcrypt.hash(newPasscode.trim(), 10);
 
-    await prisma.$executeRawUnsafe(
-      `UPDATE gym_settings SET "adminPasscodeHash" = $1, "updatedAt" = NOW() WHERE id = 'default';`,
-      newHash
-    );
+    await prisma.gymSetting.update({
+      where: { id: "default" },
+      data: { adminPasscodeHash: newHash },
+    });
 
     // Refresh cookie
     const cookieStore = await cookies();
@@ -248,3 +250,4 @@ export async function lockAdminSessionAction(): Promise<{ success: boolean }> {
     return { success: false };
   }
 }
+

@@ -35,32 +35,14 @@ export function QrScannerModal({
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const [successInfo, setSuccessInfo] = React.useState<{ checkInTime: string; gate: string } | null>(null);
 
-  // Initialize camera when modal opens
-  React.useEffect(() => {
-    if (!isOpen) {
-      stopCamera();
-      setSuccessInfo(null);
-      setErrorMsg(null);
-      return;
+  const stopCamera = React.useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
     }
+  }, []);
 
-    startCamera();
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      stopCamera();
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen]);
-
-  const startCamera = async () => {
-    setCameraError(null);
+  const startCamera = React.useCallback(async () => {
     try {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setHasCamera(false);
@@ -83,14 +65,33 @@ export function QrScannerModal({
       setHasCamera(false);
       setCameraError("Camera permission denied or camera not found on this device.");
     }
-  };
+  }, []);
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
-    }
-  };
+  const handleClose = React.useCallback(() => {
+    stopCamera();
+    setSuccessInfo(null);
+    setErrorMsg(null);
+    onClose();
+  }, [onClose, stopCamera]);
+
+  // Initialize camera when modal opens
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    startCamera();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      stopCamera();
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, handleClose, startCamera, stopCamera]);
 
   const handleVerifyCheckIn = async (code: string) => {
     setIsProcessing(true);
@@ -126,7 +127,7 @@ export function QrScannerModal({
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-[#17221D]/60 backdrop-blur-xs transition-opacity"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* Modal Card */}
@@ -134,7 +135,7 @@ export function QrScannerModal({
         {/* Close Button */}
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-5 right-5 rounded-full border border-border bg-card p-2 text-[#718078] hover:bg-[#F5F8F6] hover:text-foreground transition-all cursor-pointer"
           aria-label="Close scanner"
         >

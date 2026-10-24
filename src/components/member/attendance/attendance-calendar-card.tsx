@@ -8,7 +8,6 @@ import {
   TrendingUp,
   CheckCircle2,
   Clock,
-  DoorOpen,
   X,
 } from "lucide-react";
 import type { CalendarDay } from "@/types/member-attendance";

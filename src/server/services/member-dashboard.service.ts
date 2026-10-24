@@ -323,9 +323,10 @@ export async function getMemberDashboardData(
  */
 export async function recordMemberQrCheckIn(
   memberId: string,
-  qrCode: string
+  qrCode?: string
 ): Promise<{ success: boolean; error?: string; checkInTime?: string; gate?: string }> {
   try {
+    void qrCode;
     const member = await prisma.member.findUnique({
       where: { id: memberId },
       include: {

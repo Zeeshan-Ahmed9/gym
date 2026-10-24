@@ -4,9 +4,6 @@ import * as React from "react";
 import {
   Calendar,
   Flame,
-  Check,
-  TrendingDown,
-  TrendingUp,
 } from "lucide-react";
 import type {
   AttendanceStats,

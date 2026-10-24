@@ -1,7 +1,7 @@
 import * as React from "react";
 import { getMemberAttendanceData } from "@/server/services/member-attendance.service";
 import { MemberAttendanceView } from "@/components/member/attendance";
-import { Calendar, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {

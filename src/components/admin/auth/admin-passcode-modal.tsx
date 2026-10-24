@@ -36,10 +36,9 @@ export function AdminPasscodeModal({
 }: AdminPasscodeModalProps) {
   const router = useRouter();
 
-  const [mode, setMode] = React.useState<"enter" | "create" | "change">("enter");
+  const [mode, setMode] = React.useState<"enter" | "create" | "change">(initialMode || "enter");
   const [loading, setLoading] = React.useState(false);
   const [checkingStatus, setCheckingStatus] = React.useState(true);
-  const [isConfigured, setIsConfigured] = React.useState(false);
 
   // Form states
   const [passcode, setPasscode] = React.useState("");
@@ -61,18 +60,10 @@ export function AdminPasscodeModal({
     if (!isOpen) return;
 
     let mounted = true;
-    setCheckingStatus(true);
-    setError(null);
-    setSuccessMsg(null);
-    setPasscode("");
-    setConfirmPasscode("");
-    setPreviousPasscode("");
-    setNewPasscode("");
 
     getAdminPasscodeStatus()
       .then((status) => {
         if (!mounted) return;
-        setIsConfigured(status.isConfigured);
 
         if (initialMode) {
           setMode(initialMode);

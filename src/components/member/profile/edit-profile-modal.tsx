@@ -24,15 +24,15 @@ export function EditProfileModal({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
-  // Sync state when modal opens
-  React.useEffect(() => {
-    if (isOpen) {
-      setName(member.name);
-      setPhone(member.phone);
-      setEmail(member.email);
-      setErrorMsg(null);
-    }
-  }, [isOpen, member]);
+  // Sync state when member changes
+  const [prevMember, setPrevMember] = React.useState(member);
+  if (prevMember !== member) {
+    setPrevMember(member);
+    setName(member.name);
+    setPhone(member.phone);
+    setEmail(member.email);
+    setErrorMsg(null);
+  }
 
   // Handle ESC key
   React.useEffect(() => {

@@ -6,7 +6,7 @@ import {
   MemberStatsCards,
   FloorOccupancyBanner,
 } from "@/components/member";
-import { Users, AlertCircle } from "lucide-react";
+import { Users } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
