@@ -235,15 +235,15 @@ export function AdminPasscodeModal({
               {mode === "create"
                 ? "Create Admin Passcode"
                 : mode === "change"
-                ? "Change Admin Passcode"
-                : "Admin Access Passcode"}
+                  ? "Change Admin Passcode"
+                  : "Admin Access Passcode"}
             </h3>
             <p className="mt-1 text-xs sm:text-sm text-white/60">
               {mode === "create"
                 ? "Set a secure passcode to protect and lock the Admin Control Center."
                 : mode === "change"
-                ? "Pehle pechla pass dalo (Enter previous passcode) to verify and set a new one."
-                : "Hamesha pass dal kr he admin panel open hoga (Enter passcode to proceed)."}
+                  ? "(Enter previous passcode) to verify and set a new one."
+                  : "(Enter passcode to proceed)."}
             </p>
           </div>
         </div>
