@@ -1,6 +1,7 @@
 import * as React from "react";
 import { getMemberDashboardData } from "@/server/services/member-dashboard.service";
 import { prisma } from "@/lib/db";
+import type { Progress } from "@prisma/client";
 import { format } from "date-fns";
 import { ProgressView } from "@/components/member/progress-view";
 
@@ -25,7 +26,7 @@ export default async function MemberProgressPage() {
     orderBy: { date: "desc" },
   });
 
-  const formattedRecords = rawRecords.map((r) => ({
+  const formattedRecords = rawRecords.map((r: Progress) => ({
     id: r.id,
     date: format(new Date(r.date), "dd MMM yyyy"),
     weight: r.weight,

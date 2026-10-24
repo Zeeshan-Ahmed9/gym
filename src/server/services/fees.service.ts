@@ -47,7 +47,7 @@ export async function getFeesSummary(): Promise<FeesSummaryData> {
       }),
     ]);
 
-    const collectedMonth = monthPayments.reduce(
+    const collectedMonth = monthPayments.reduce<number>(
       (sum, p) => sum + Number(p.amount),
       0
     );

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { recordManualCheckIn } from "@/server/services/attendance.service";
 import { prisma } from "@/lib/db";
+import type { Payment } from "@prisma/client";
 import type { ActionResult } from "@/types";
 import { auth } from "@/lib/auth";
 import { format, isBefore, startOfDay, endOfDay } from "date-fns";
@@ -69,7 +70,7 @@ export async function findMemberForCheckInAction(
       expiryDateStr = format(exp, "dd MMM yyyy");
     }
 
-    const hasPaid = member.payments.some((p) => p.month === currentMonthKey);
+    const hasPaid = member.payments.some((p: Payment) => p.month === currentMonthKey);
 
     // Check if already checked in today
     const existing = await prisma.attendance.findFirst({

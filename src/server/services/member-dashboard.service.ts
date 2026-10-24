@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import type { Progress, Attendance } from "@prisma/client";
 import type { MemberDashboardData, WeekdayStatus } from "@/types/member-dashboard";
 import {
   format,
@@ -179,14 +180,14 @@ export async function getMemberDashboardData(
     });
 
     const distinctMonthDates = new Set(
-      currentMonthAttendances.map((a) => format(new Date(a.checkInTime), "yyyy-MM-dd"))
+      currentMonthAttendances.map((a: Attendance) => format(new Date(a.checkInTime), "yyyy-MM-dd"))
     );
     const visitsThisMonth = distinctMonthDates.size;
     const monthlyGoal = 20;
     const goalPercentage = Math.min(100, Math.round((visitsThisMonth / monthlyGoal) * 100));
 
     // Today's attendance
-    const todayAttendance = member.attendances.find((a) =>
+    const todayAttendance = member.attendances.find((a: Attendance) =>
       isSameDay(new Date(a.checkInTime), now)
     );
     const checkedInToday = !!todayAttendance;
@@ -209,7 +210,7 @@ export async function getMemberDashboardData(
     const dayLetters = ["M", "T", "W", "T", "F", "S", "S"];
     const weekDays: WeekdayStatus[] = dayLetters.map((letter, idx) => {
       const dayDate = addDays(weekStart, idx);
-      const attended = member.attendances.some((a) =>
+      const attended = member.attendances.some((a: Attendance) =>
         isSameDay(new Date(a.checkInTime), dayDate)
       );
       return {
@@ -231,16 +232,20 @@ export async function getMemberDashboardData(
 
     if (member.progressRecords.length > 0) {
       const weights = member.progressRecords
-        .map((p) => p.weight)
+        .map((p: Progress) => p.weight)
         .filter((w): w is number => typeof w === "number");
 
       if (weights.length > 0) {
-        startingWeight = weights[0];
-        currentWeight = weights[weights.length - 1];
-        weightChange = currentWeight - startingWeight;
-        const sign = weightChange > 0 ? "+" : weightChange < 0 ? "−" : "";
-        weightChangeFormatted = `${sign}${Math.abs(weightChange).toFixed(1)} kg`;
-        trendPoints = weights;
+        const first = weights[0];
+        const last = weights[weights.length - 1];
+        if (typeof first === "number" && typeof last === "number") {
+          startingWeight = first;
+          currentWeight = last;
+          weightChange = last - first;
+          const sign = weightChange > 0 ? "+" : weightChange < 0 ? "−" : "";
+          weightChangeFormatted = `${sign}${Math.abs(weightChange).toFixed(1)} kg`;
+          trendPoints = weights;
+        }
       }
     }
 

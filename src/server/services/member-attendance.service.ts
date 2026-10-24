@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import type { Attendance } from "@prisma/client";
 import { getGymSettings } from "./settings.service";
 import type {
   MemberAttendanceData,
@@ -257,13 +258,13 @@ export async function getMemberAttendanceData(options?: {
       const isToday = isSameDay(iterDate, now);
       const isFuture = isAfter(iterDate, now) && !isToday;
 
-      const dayAttendances = allAttendances.filter((a) =>
+      const dayAttendances = allAttendances.filter((a: Attendance) =>
         isSameDay(new Date(a.checkInTime), iterDate)
       );
       const hasAttendance = isCurrentMonth && !isFuture && dayAttendances.length > 0;
 
       const dayRecords: CalendarDayRecord[] = isCurrentMonth
-        ? dayAttendances.map((a) => {
+        ? dayAttendances.map((a: Attendance) => {
             const checkIn = new Date(a.checkInTime);
             return {
               id: a.id,
@@ -391,18 +392,18 @@ export async function getMemberAttendanceData(options?: {
     // 7. Attendance History Records
     // Sorted by checkInTime
     const sortOrder = options?.sort === "oldest" ? "asc" : "desc";
-    const sortedAttendances = [...allAttendances].sort((a, b) => {
+    const sortedAttendances = [...allAttendances].sort((a: Attendance, b: Attendance) => {
       const timeA = new Date(a.checkInTime).getTime();
       const timeB = new Date(b.checkInTime).getTime();
       return sortOrder === "asc" ? timeA - timeB : timeB - timeA;
     });
 
-    const monthRecords = sortedAttendances.filter((a) => {
+    const monthRecords = sortedAttendances.filter((a: Attendance) => {
       const d = new Date(a.checkInTime);
       return format(d, "yyyy-MM") === targetMonthKey;
     });
 
-    const historyItems: AttendanceHistoryItem[] = sortedAttendances.map((a) => {
+    const historyItems: AttendanceHistoryItem[] = sortedAttendances.map((a: Attendance) => {
       const checkIn = new Date(a.checkInTime);
       return {
         id: a.id,

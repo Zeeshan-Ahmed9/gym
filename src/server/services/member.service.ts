@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import type { Payment } from "@prisma/client";
 import type { MemberListItem, MemberStats } from "@/types/member";
 import { format, isBefore, addDays } from "date-fns";
 
@@ -91,7 +92,7 @@ export async function getMembersList(): Promise<MemberListItem[]> {
       // Fee status: Check if member has paid for the current month
       // Or if their latest payment date is within current month
       const hasPaidCurrentMonth = member.payments.some(
-        (p) => p.month === currentMonthKey
+        (p: Payment) => p.month === currentMonthKey
       );
 
       const feeStatus = hasPaidCurrentMonth ? "PAID" : "DUE";
@@ -164,7 +165,7 @@ export async function getMembersStats(): Promise<MemberStats> {
         expiringOrExpired++;
       }
 
-      const hasPaid = member.payments.some((p) => p.month === currentMonthKey);
+      const hasPaid = member.payments.some((p: Payment) => p.month === currentMonthKey);
       if (!hasPaid) {
         duesOutstanding++;
       }

@@ -42,31 +42,6 @@ export function QrScannerModal({
     }
   }, []);
 
-  const startCamera = React.useCallback(async () => {
-    try {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        setHasCamera(false);
-        setCameraError("Camera access is not supported by your browser.");
-        return;
-      }
-
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
-        audio: false,
-      });
-
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play().catch(() => {});
-      }
-      setHasCamera(true);
-    } catch {
-      setHasCamera(false);
-      setCameraError("Camera permission denied or camera not found on this device.");
-    }
-  }, []);
-
   const handleClose = React.useCallback(() => {
     stopCamera();
     setSuccessInfo(null);
@@ -78,7 +53,39 @@ export function QrScannerModal({
   React.useEffect(() => {
     if (!isOpen) return;
 
-    startCamera();
+    let active = true;
+
+    Promise.resolve().then(async () => {
+      if (!active) return;
+      try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          setHasCamera(false);
+          setCameraError("Camera access is not supported by your browser.");
+          return;
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+          audio: false,
+        });
+
+        if (!active) {
+          stream.getTracks().forEach((track) => track.stop());
+          return;
+        }
+
+        streamRef.current = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play().catch(() => {});
+        }
+        setHasCamera(true);
+      } catch {
+        if (!active) return;
+        setHasCamera(false);
+        setCameraError("Camera permission denied or camera not found on this device.");
+      }
+    });
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -88,10 +95,11 @@ export function QrScannerModal({
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      active = false;
       stopCamera();
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, handleClose, startCamera, stopCamera]);
+  }, [isOpen, handleClose, stopCamera]);
 
   const handleVerifyCheckIn = async (code: string) => {
     setIsProcessing(true);

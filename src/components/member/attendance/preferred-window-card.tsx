@@ -10,22 +10,21 @@ interface PreferredWindowCardProps {
   distribution: TimeDistributionBucket[];
 }
 
+const DEFAULT_BARS = [
+  { height: 18, isPeak: false, color: "bg-[#E3EAE5]" },
+  { height: 26, isPeak: false, color: "bg-[#E3EAE5]" },
+  { height: 22, isPeak: false, color: "bg-[#E3EAE5]" },
+  { height: 42, isPeak: false, color: "bg-[#A7E4CD]" },
+  { height: 85, isPeak: true, color: "bg-primary" },
+  { height: 46, isPeak: false, color: "bg-[#A7E4CD]" },
+  { height: 20, isPeak: false, color: "bg-[#E3EAE5]" },
+];
+
 export function PreferredWindowCard({
   peakTimeLabel,
   hasData,
   distribution,
 }: PreferredWindowCardProps) {
-  // Mini chart bar heights (7 bars representing timeline from morning to night)
-  const defaultBars = [
-    { height: 18, isPeak: false, color: "bg-[#E3EAE5]" },
-    { height: 26, isPeak: false, color: "bg-[#E3EAE5]" },
-    { height: 22, isPeak: false, color: "bg-[#E3EAE5]" },
-    { height: 42, isPeak: false, color: "bg-[#A7E4CD]" },
-    { height: 85, isPeak: true, color: "bg-primary" }, // Peak bar in strong emerald
-    { height: 46, isPeak: false, color: "bg-[#A7E4CD]" },
-    { height: 20, isPeak: false, color: "bg-[#E3EAE5]" },
-  ];
-
   const bars = React.useMemo(() => {
     if (distribution && distribution.length > 0) {
       const maxCount = Math.max(...distribution.map((d) => d.count), 1);
@@ -38,7 +37,7 @@ export function PreferredWindowCard({
         };
       });
     }
-    return defaultBars;
+    return DEFAULT_BARS;
   }, [distribution]);
 
   return (
