@@ -93,6 +93,61 @@ export async function getGymSettings(): Promise<GymSettings> {
 }
 
 /**
+ * Safely ensure the default gym setting record exists in the database.
+ * Uses upsert to prevent duplicate records or race conditions.
+ */
+export async function ensureDefaultGymSettings(): Promise<GymSettings> {
+  const existing = await prisma.gymSetting.findUnique({
+    where: { id: "default" },
+  });
+
+  if (existing) {
+    const result: GymSettings = {
+      gymName: existing.gymName || DEFAULT_GYM_SETTINGS.gymName,
+      gymLogo: existing.gymLogo ?? null,
+      phone: existing.phone || DEFAULT_GYM_SETTINGS.phone,
+      email: existing.email || DEFAULT_GYM_SETTINGS.email,
+      address: existing.address || DEFAULT_GYM_SETTINGS.address,
+      defaultMonthlyFee: Number(existing.defaultMonthlyFee || DEFAULT_GYM_SETTINGS.defaultMonthlyFee),
+      defaultMembershipDurationMonths: Number(
+        existing.defaultMembershipDurationMonths || DEFAULT_GYM_SETTINGS.defaultMembershipDurationMonths
+      ),
+    };
+    cachedSettings = result;
+    lastSettingsFetchTime = Date.now();
+    return result;
+  }
+
+  const created = await prisma.gymSetting.upsert({
+    where: { id: "default" },
+    update: {},
+    create: {
+      id: "default",
+      gymName: DEFAULT_GYM_SETTINGS.gymName,
+      gymLogo: DEFAULT_GYM_SETTINGS.gymLogo,
+      phone: DEFAULT_GYM_SETTINGS.phone,
+      email: DEFAULT_GYM_SETTINGS.email,
+      address: DEFAULT_GYM_SETTINGS.address,
+      defaultMonthlyFee: DEFAULT_GYM_SETTINGS.defaultMonthlyFee,
+      defaultMembershipDurationMonths: DEFAULT_GYM_SETTINGS.defaultMembershipDurationMonths,
+    },
+  });
+
+  const result: GymSettings = {
+    gymName: created.gymName,
+    gymLogo: created.gymLogo,
+    phone: created.phone,
+    email: created.email,
+    address: created.address,
+    defaultMonthlyFee: Number(created.defaultMonthlyFee),
+    defaultMembershipDurationMonths: created.defaultMembershipDurationMonths,
+  };
+  cachedSettings = result;
+  lastSettingsFetchTime = Date.now();
+  return result;
+}
+
+/**
  * Update the active gym configuration settings in Neon PostgreSQL.
  */
 export async function updateGymSettings(
