@@ -11,14 +11,9 @@ export const authConfig = {
       const userRole = auth?.user?.role as UserRole | undefined;
       const pathname = nextUrl.pathname;
 
-      // Protected Admin routes
-      if (pathname.startsWith("/admin")) {
-        if (!isLoggedIn) {
-          // Allow local developer preview in development if no user session exists yet
-          return process.env.NODE_ENV === "development";
-        }
-        // Strict role check: Members can NEVER access admin pages
-        return userRole === "ADMIN";
+      // Admin routes & private login: protected directly via server-side session guard (Neon admin_credentials)
+      if (pathname.startsWith("/admin") || pathname.startsWith("/control-panel-7x9k")) {
+        return true;
       }
 
       // Public Member Login & Activation

@@ -28,12 +28,6 @@ export function MemberFooter() {
           >
             Privacy
           </Link>
-          <Link
-            href="/admin/settings"
-            className="hover:text-[#14211D] transition-colors"
-          >
-            Facility Desk
-          </Link>
         </div>
       </div>
     </footer>

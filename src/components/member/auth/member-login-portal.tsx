@@ -430,17 +430,17 @@ export function MemberLoginPortal() {
         {/* Footer Navigation */}
         <div className="mt-6 pt-4 border-t border-border/80 flex items-center justify-between text-xs text-[#718078]">
           <Link
-            href="/login"
+            href="/"
             className="hover:text-[#14211D] transition-colors font-medium"
           >
-            ← Portals Directory
+            ← Back to Home
           </Link>
 
           <Link
-            href="/admin"
-            className="hover:text-primary transition-colors font-semibold"
+            href="/terms"
+            className="hover:text-[#14211D] transition-colors"
           >
-            Admin Panel →
+            Terms & Privacy
           </Link>
         </div>
       </div>

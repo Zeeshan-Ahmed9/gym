@@ -44,26 +44,6 @@ export default function LoginPage() {
             </div>
             <ArrowRight className="h-4 w-4 text-[#718078] group-hover:text-primary group-hover:translate-x-1 transition-all" />
           </Link>
-
-          <Link
-            href="/admin"
-            className="flex items-center justify-between rounded-2xl border border-border bg-[#F5F8F6] p-4 hover:border-primary hover:bg-white transition-all shadow-xs group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-primary">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <div className="text-left">
-                <span className="text-sm font-semibold text-foreground block">
-                  Admin Dashboard
-                </span>
-                <span className="text-xs text-[#718078] block">
-                  Members roster, fee collection, settings
-                </span>
-              </div>
-            </div>
-            <ArrowRight className="h-4 w-4 text-[#718078] group-hover:text-primary group-hover:translate-x-1 transition-all" />
-          </Link>
         </div>
 
         <div className="pt-4 text-center">

@@ -32,10 +32,10 @@ export default async function MemberHomePage() {
           </p>
         </div>
         <Link
-          href="/admin/members"
+          href="/member/login"
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-xs font-bold text-white hover:bg-primary-hover transition-all shadow-xs"
         >
-          <span>Go to Admin Members</span>
+          <span>Return to Member Login</span>
         </Link>
       </div>
     );

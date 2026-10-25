@@ -11,7 +11,7 @@ import {
 import type { GymSettings, GymSettingsFormErrors } from "@/types/settings";
 import { GymProfileCard } from "./gym-profile-card";
 import { MembershipDefaultsCard } from "./membership-defaults-card";
-import { AdminPasscodeCard } from "./admin-passcode-card";
+import { AdminPasswordCard } from "./admin-password-card";
 import { SettingsPreviewCard } from "./settings-preview-card";
 import { SettingsGuidelinesCard } from "./settings-guidelines-card";
 import { updateSettingsAction } from "@/server/actions/settings.actions";
@@ -223,7 +223,7 @@ export function SettingsView({ initialSettings }: SettingsViewProps) {
             onChange={handleFieldChange}
           />
 
-          <AdminPasscodeCard />
+          <AdminPasswordCard />
         </div>
 
         {/* Right Column: Live Preview & Guidelines */}
