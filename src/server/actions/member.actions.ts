@@ -13,19 +13,7 @@ import {
 } from "@/server/services/member.service";
 import type { ActionResult } from "@/types";
 import type { MemberDetails } from "@/types/member";
-import { auth } from "@/lib/auth";
-
-async function checkAdminAuth(): Promise<boolean> {
-  try {
-    const session = await auth();
-    if (process.env.NODE_ENV === "development" && !session?.user) {
-      return true;
-    }
-    return session?.user?.role === "ADMIN";
-  } catch {
-    return process.env.NODE_ENV === "development";
-  }
-}
+import { checkAdminAuth } from "@/server/auth/admin-session";
 
 function safeRevalidate(paths: string[]) {
   try {

@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
 export const ADMIN_COOKIE_NAME = "ironman_admin_session";
 export const COOKIE_MAX_AGE = 60 * 60 * 24; // 24 hours in seconds
@@ -111,3 +112,34 @@ export async function requireAdminSession(): Promise<void> {
     redirect("/control-panel-7x9k");
   }
 }
+
+/**
+ * Combined authorization check for backend admin server actions.
+ * Returns true if the user has an active private admin session cookie
+ * OR an authenticated NextAuth session with ADMIN role.
+ */
+export async function checkAdminAuth(): Promise<boolean> {
+  try {
+    // 1. Primary: Verify private admin session cookie (from /control-panel-7x9k)
+    const isAdminCookieValid = await verifyAdminSession();
+    if (isAdminCookieValid) {
+      return true;
+    }
+
+    // 2. Secondary: Check NextAuth session for backwards compatibility
+    const session = await auth();
+    if (session?.user?.role === "ADMIN") {
+      return true;
+    }
+
+    // 3. Fallback for development if no session is set
+    if (process.env.NODE_ENV === "development" && !session?.user) {
+      return true;
+    }
+
+    return false;
+  } catch {
+    return process.env.NODE_ENV === "development";
+  }
+}
+

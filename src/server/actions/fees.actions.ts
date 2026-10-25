@@ -3,19 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { recordPayment, type RecordPaymentInput } from "@/server/services/fees.service";
 import type { ActionResult } from "@/types";
-import { auth } from "@/lib/auth";
-
-async function checkAdminAuth(): Promise<boolean> {
-  try {
-    const session = await auth();
-    if (process.env.NODE_ENV === "development" && !session?.user) {
-      return true;
-    }
-    return session?.user?.role === "ADMIN";
-  } catch {
-    return process.env.NODE_ENV === "development";
-  }
-}
+import { checkAdminAuth } from "@/server/auth/admin-session";
 
 export async function recordPaymentAction(
   input: RecordPaymentInput
