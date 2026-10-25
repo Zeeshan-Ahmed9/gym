@@ -16,7 +16,8 @@ const globalForPrisma = globalThis as unknown as {
 
 export function getPool(): Pool {
   if (!globalForPrisma.pool) {
-    const connectionString = process.env.DATABASE_URL;
+    const connectionString =
+      process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
     const pool = new Pool({
       connectionString,
       max: 10,
@@ -27,6 +28,11 @@ export function getPool(): Pool {
         rejectUnauthorized: false,
       },
     });
+
+    pool.on("error", (err) => {
+      console.warn("Neon PostgreSQL pool idle client warning:", err.message);
+    });
+
     // Increase max listeners to prevent memory leak warning during Next.js HMR
     pool.setMaxListeners(50);
     globalForPrisma.pool = pool;
@@ -36,7 +42,7 @@ export function getPool(): Pool {
 
 export function getAdapter(): PrismaPg {
   if (!globalForPrisma.adapter) {
-    globalForPrisma.adapter = new PrismaPg(getPool());
+    globalForPrisma.adapter = new PrismaPg(getPool(), { schema: "public" });
   }
   return globalForPrisma.adapter;
 }
