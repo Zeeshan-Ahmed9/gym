@@ -26,7 +26,12 @@ export function formatCurrency(
 }
 
 /**
- * Format date safely.
+ * Application default timezone: Pakistan Standard Time (PKT, UTC+5)
+ */
+export const APP_TIMEZONE = process.env.NEXT_PUBLIC_TIMEZONE || "Asia/Karachi";
+
+/**
+ * Format date safely using Pakistan timezone by default.
  */
 export function formatDate(
   date: Date | string | number,
@@ -38,5 +43,19 @@ export function formatDate(
 ): string {
   const d = typeof date === "string" || typeof date === "number" ? new Date(date) : date;
   if (isNaN(d.getTime())) return "N/A";
-  return new Intl.DateTimeFormat("en-US", options).format(d);
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: APP_TIMEZONE,
+    ...options,
+  }).format(d);
+}
+
+/**
+ * Format a time in Pakistan Standard Time (e.g. 5:30 PM).
+ */
+export function formatTimePK(date: Date | string | number): string {
+  return formatDate(date, {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
 }

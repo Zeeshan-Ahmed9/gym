@@ -8,6 +8,9 @@ if (typeof dns.setDefaultResultOrder === "function") {
   dns.setDefaultResultOrder("ipv4first");
 }
 
+// Ensure Node.js runtime timezone defaults to Pakistan Standard Time (PKT, UTC+5)
+process.env.TZ = process.env.TZ || "Asia/Karachi";
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
   pool: Pool | undefined;
@@ -20,6 +23,7 @@ export function getPool(): Pool {
       process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
     const pool = new Pool({
       connectionString,
+      options: "-c timezone=Asia/Karachi",
       max: 10,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 30000, // 30s for serverless Neon compute cold-start resume
