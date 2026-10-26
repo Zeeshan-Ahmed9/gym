@@ -21,12 +21,9 @@ export const authConfig = {
         return true;
       }
 
-      // Protected Member routes
+      // Member routes & login: protected directly via server-side session guard (fitflow_member_session) in (member)/layout.tsx
       if (pathname.startsWith("/member")) {
-        if (!isLoggedIn) {
-          return process.env.NODE_ENV === "development";
-        }
-        return userRole === "MEMBER" || userRole === "ADMIN";
+        return true;
       }
 
       // If user is already logged in and navigates to login page

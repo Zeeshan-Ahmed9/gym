@@ -103,9 +103,8 @@ export function MemberLoginPortal() {
       if (res.success) {
         setSuccessMsg("Password set successfully! Redirecting to your dashboard...");
         setTimeout(() => {
-          router.push("/member");
-          router.refresh();
-        }, 1000);
+          window.location.href = "/member";
+        }, 800);
       } else {
         setActionError(res.error || "Failed to set password.");
       }
@@ -138,9 +137,8 @@ export function MemberLoginPortal() {
       if (res.success) {
         setSuccessMsg("Welcome back! Redirecting to your dashboard...");
         setTimeout(() => {
-          router.push("/member");
-          router.refresh();
-        }, 800);
+          window.location.href = "/member";
+        }, 600);
       } else {
         setActionError(res.error || "Incorrect password. Please try again.");
       }
